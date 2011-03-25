@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
-            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
             this.textBoxTimeLimit = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -55,13 +53,20 @@
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonRun = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.RichTextBox();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.pictureTimeLimit = new System.Windows.Forms.PictureBox();
+            this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
+            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -81,24 +86,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Решение";
-            // 
-            // pictureTestsFolder
-            // 
-            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
-            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
-            this.pictureTestsFolder.Name = "pictureTestsFolder";
-            this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
-            this.pictureTestsFolder.TabIndex = 7;
-            this.pictureTestsFolder.TabStop = false;
-            // 
-            // pictureSourceCode
-            // 
-            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
-            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
-            this.pictureSourceCode.Name = "pictureSourceCode";
-            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
-            this.pictureSourceCode.TabIndex = 6;
-            this.pictureSourceCode.TabStop = false;
             // 
             // textBoxTimeLimit
             // 
@@ -135,9 +122,12 @@
             this.textBoxTestsFolder.AllowDrop = true;
             this.textBoxTestsFolder.Location = new System.Drawing.Point(96, 62);
             this.textBoxTestsFolder.Name = "textBoxTestsFolder";
-            this.textBoxTestsFolder.Size = new System.Drawing.Size(331, 20);
+            this.textBoxTestsFolder.Size = new System.Drawing.Size(332, 20);
             this.textBoxTestsFolder.TabIndex = 2;
             this.textBoxTestsFolder.TextChanged += new System.EventHandler(this.textBoxTestsFolder_TextChanged);
+            this.textBoxTestsFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragDrop);
+            this.textBoxTestsFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragEnter);
+            this.textBoxTestsFolder.DoubleClick += new System.EventHandler(this.textBoxTestsFolder_DoubleClick);
             // 
             // label1
             // 
@@ -156,6 +146,9 @@
             this.textBoxSourceFile.Size = new System.Drawing.Size(331, 20);
             this.textBoxSourceFile.TabIndex = 0;
             this.textBoxSourceFile.TextChanged += new System.EventHandler(this.textBoxSourceFile_TextChanged);
+            this.textBoxSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragDrop);
+            this.textBoxSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragEnter);
+            this.textBoxSourceFile.DoubleClick += new System.EventHandler(this.textBoxSourceFile_DoubleClick);
             // 
             // groupBox2
             // 
@@ -254,8 +247,7 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.файлToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(849, 24);
@@ -325,6 +317,16 @@
             this.output.TabIndex = 4;
             this.output.Text = "";
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.AddExtension = false;
+            this.openFileDialog.ReadOnlyChecked = true;
+            // 
+            // folderBrowserDialog
+            // 
+            this.folderBrowserDialog.Description = "Выберите папку, в которой содержатся тесты к задаче";
+            this.folderBrowserDialog.ShowNewFolderButton = false;
+            // 
             // pictureTimeLimit
             // 
             this.pictureTimeLimit.Image = global::olympchecker_gui.Icons.OK;
@@ -333,6 +335,47 @@
             this.pictureTimeLimit.Size = new System.Drawing.Size(20, 20);
             this.pictureTimeLimit.TabIndex = 8;
             this.pictureTimeLimit.TabStop = false;
+            // 
+            // pictureTestsFolder
+            // 
+            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
+            this.pictureTestsFolder.Name = "pictureTestsFolder";
+            this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
+            this.pictureTestsFolder.TabIndex = 7;
+            this.pictureTestsFolder.TabStop = false;
+            // 
+            // pictureSourceCode
+            // 
+            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
+            this.pictureSourceCode.Name = "pictureSourceCode";
+            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
+            this.pictureSourceCode.TabIndex = 6;
+            this.pictureSourceCode.TabStop = false;
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.настройкиToolStripMenuItem,
+            this.выходToolStripMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // настройкиToolStripMenuItem
+            // 
+            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
+            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.настройкиToolStripMenuItem.Text = "Настройки";
+            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // выходToolStripMenuItem
+            // 
+            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.выходToolStripMenuItem.Text = "Выход";
+            this.выходToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -350,13 +393,13 @@
             this.Text = "OlympChecker";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -392,5 +435,10 @@
         private System.Windows.Forms.Button buttonRun;
         private System.Windows.Forms.RichTextBox output;
         private System.Windows.Forms.PictureBox pictureTimeLimit;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
     }
 }

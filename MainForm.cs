@@ -35,15 +35,77 @@ namespace olympchecker_gui
             new SettingsForm().ShowDialog();
         }
 
+        #region textBoxSourceFile
         private void textBoxSourceFile_TextChanged(object sender, EventArgs e)
         {
             pictureSourceCode.Image = (File.Exists(textBoxSourceFile.Text) ? Icons.OK : Icons.Error);
         }
 
+        private void textBoxSourceFile_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void textBoxSourceFile_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                textBoxSourceFile.Text = filePaths[0];
+            }
+        }
+
+        private void textBoxSourceFile_DoubleClick(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxSourceFile.Text = openFileDialog.FileName;
+            }
+        }
+        #endregion
+
+        #region textBoxTestsFolder
         private void textBoxTestsFolder_TextChanged(object sender, EventArgs e)
         {
             pictureTestsFolder.Image = (Directory.Exists(textBoxTestsFolder.Text) ? Icons.OK : Icons.Error);
+        } 
+
+        private void textBoxTestsFolder_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
         }
+
+        private void textBoxTestsFolder_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                textBoxTestsFolder.Text = filePaths[0];
+            }
+        }
+
+        private void textBoxTestsFolder_DoubleClick(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxTestsFolder.Text = folderBrowserDialog.SelectedPath;
+            }
+        }
+        #endregion
 
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
@@ -125,8 +187,8 @@ namespace olympchecker_gui
             else
             {
                 output.SelectionColor = color;
-                output.SelectedText = text;
-                output.ScrollToCaret();
+                output.AppendText(text);
+                //output.ScrollToCaret();
             }
         }
 
@@ -160,5 +222,6 @@ namespace olympchecker_gui
         {
             return checkBoxExactChecking.Checked;
         }
+
     }
 }

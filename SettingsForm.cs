@@ -51,8 +51,6 @@ namespace olympchecker_gui
             textBoxSourceExtensions.Text = compilers[comboBoxCompilerName.SelectedIndex].extensions;
             textBoxCompiler.Text = compilers[comboBoxCompilerName.SelectedIndex].path;
             textBoxCompilerOptions.Text = compilers[comboBoxCompilerName.SelectedIndex].options;
-
-            pictureBox.Image = (File.Exists(compilers[comboBoxCompilerName.SelectedIndex].path) ? Icons.OK : Icons.Error);
         }
 
         private void buttonAddCompiler_Click(object sender, EventArgs e)
@@ -86,6 +84,32 @@ namespace olympchecker_gui
                 compilers.RemoveAt(comboBoxCompilerName.SelectedIndex);
                 comboBoxCompilerName.SelectedIndex = 0;
             }
+        }
+
+        private void textBoxCompiler_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void textBoxCompiler_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                textBoxCompiler.Text = filePaths[0];
+            }
+        }
+
+        private void textBoxCompiler_TextChanged(object sender, EventArgs e)
+        {
+            pictureBox.Image = (File.Exists(textBoxCompiler.Text) ? Icons.OK : Icons.Error);
         }
     }
 }

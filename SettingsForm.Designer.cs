@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.textBoxCompilerName = new System.Windows.Forms.TextBox();
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDeleteCompiler = new System.Windows.Forms.Button();
@@ -43,7 +44,6 @@
             this.comboBoxCompilerName = new System.Windows.Forms.ComboBox();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -69,6 +69,15 @@
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Настройки компиляторов";
+            // 
+            // pictureBox
+            // 
+            this.pictureBox.Location = new System.Drawing.Point(451, 111);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(20, 20);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox.TabIndex = 12;
+            this.pictureBox.TabStop = false;
             // 
             // textBoxCompilerName
             // 
@@ -155,6 +164,9 @@
             this.textBoxCompiler.Name = "textBoxCompiler";
             this.textBoxCompiler.Size = new System.Drawing.Size(329, 20);
             this.textBoxCompiler.TabIndex = 2;
+            this.textBoxCompiler.TextChanged += new System.EventHandler(this.textBoxCompiler_TextChanged);
+            this.textBoxCompiler.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxCompiler_DragDrop);
+            this.textBoxCompiler.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxCompiler_DragEnter);
             // 
             // label2
             // 
@@ -194,15 +206,6 @@
             this.buttonCancel.Text = "Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // pictureBox
-            // 
-            this.pictureBox.Location = new System.Drawing.Point(451, 111);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(20, 20);
-            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox.TabIndex = 12;
-            this.pictureBox.TabStop = false;
             // 
             // SettingsForm
             // 
