@@ -55,15 +55,18 @@
             this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonRun = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.RichTextBox();
+            this.pictureTimeLimit = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.pictureTimeLimit);
             this.groupBox1.Controls.Add(this.pictureTestsFolder);
             this.groupBox1.Controls.Add(this.pictureSourceCode);
             this.groupBox1.Controls.Add(this.textBoxTimeLimit);
@@ -100,12 +103,14 @@
             // textBoxTimeLimit
             // 
             this.textBoxTimeLimit.HidePromptOnLeave = true;
-            this.textBoxTimeLimit.Location = new System.Drawing.Point(147, 92);
-            this.textBoxTimeLimit.Mask = "90.9";
+            this.textBoxTimeLimit.Location = new System.Drawing.Point(147, 96);
+            this.textBoxTimeLimit.Mask = "0.#";
             this.textBoxTimeLimit.Name = "textBoxTimeLimit";
-            this.textBoxTimeLimit.Size = new System.Drawing.Size(89, 20);
+            this.textBoxTimeLimit.Size = new System.Drawing.Size(61, 20);
             this.textBoxTimeLimit.TabIndex = 5;
-            this.textBoxTimeLimit.Text = " 10";
+            this.textBoxTimeLimit.Text = "10";
+            this.textBoxTimeLimit.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            this.textBoxTimeLimit.TextChanged += new System.EventHandler(this.textBoxTimeLimit_TextChanged);
             // 
             // label3
             // 
@@ -128,7 +133,7 @@
             // textBoxTestsFolder
             // 
             this.textBoxTestsFolder.AllowDrop = true;
-            this.textBoxTestsFolder.Location = new System.Drawing.Point(97, 62);
+            this.textBoxTestsFolder.Location = new System.Drawing.Point(96, 62);
             this.textBoxTestsFolder.Name = "textBoxTestsFolder";
             this.textBoxTestsFolder.Size = new System.Drawing.Size(331, 20);
             this.textBoxTestsFolder.TabIndex = 2;
@@ -320,6 +325,15 @@
             this.output.TabIndex = 4;
             this.output.Text = "";
             // 
+            // pictureTimeLimit
+            // 
+            this.pictureTimeLimit.Image = global::olympchecker_gui.Icons.OK;
+            this.pictureTimeLimit.Location = new System.Drawing.Point(214, 96);
+            this.pictureTimeLimit.Name = "pictureTimeLimit";
+            this.pictureTimeLimit.Size = new System.Drawing.Size(20, 20);
+            this.pictureTimeLimit.TabIndex = 8;
+            this.pictureTimeLimit.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -342,6 +356,7 @@
             this.groupBox2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -376,5 +391,6 @@
         private System.Windows.Forms.PictureBox pictureSourceCode;
         private System.Windows.Forms.Button buttonRun;
         private System.Windows.Forms.RichTextBox output;
+        private System.Windows.Forms.PictureBox pictureTimeLimit;
     }
 }

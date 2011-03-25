@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace olympchecker_gui
 {
@@ -48,6 +45,11 @@ namespace olympchecker_gui
             pictureTestsFolder.Image = (Directory.Exists(textBoxTestsFolder.Text) ? Icons.OK : Icons.Error);
         }
 
+        private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
+        {
+            pictureTimeLimit.Image = (textBoxTimeLimit.MaskCompleted ?  Icons.OK : Icons.Error);
+        }
+
         private void buttonRun_Click(object sender, EventArgs e)
         {
             Width = 865;
@@ -56,14 +58,16 @@ namespace olympchecker_gui
             {
                 return;
             }
+
+            Compiler compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
+            Tester.TestSolution(textBoxSourceFile.Text, textBoxTestsFolder.Text, 1000, compiler);
         }
 
         private bool CheckCorrect()
         {
             PrintLine("Проверка доступности файлов:");
 
-            if (!CheckFile(textBoxSourceFile.Text, "Исходный код") ||
-            !CheckFolder(textBoxTestsFolder.Text, "Папка тестов"))
+            if (!CheckFile(textBoxSourceFile.Text, "Исходный код") || !CheckFolder(textBoxTestsFolder.Text, "Папка тестов"))
             {
                 return false;
             }
@@ -109,25 +113,52 @@ namespace olympchecker_gui
             }
         }
 
-        private void Print(string text, Color color)
+        delegate void PrintToRichEdit(string text, Color color);
+
+        public void Print(string text, Color color)
         {
-            output.SelectionColor = color;
-            output.SelectedText = text;
+            if (output.InvokeRequired)
+            {
+                PrintToRichEdit d = new PrintToRichEdit(Print);
+                this.Invoke(d, new object[] { text, color });
+            }
+            else
+            {
+                output.SelectionColor = color;
+                output.SelectedText = text;
+                output.ScrollToCaret();
+            }
         }
 
-        private void Print(string text)
+        public void Print(string text)
         {
             Print(text, Color.Black);
         }
 
-        private void PrintLine(string text, Color color)
+        public void PrintLine(string text, Color color)
         {
             Print(text + "\n", color);
         }
 
-        private void PrintLine(string text)
+        public void PrintLine(string text)
         {
             PrintLine(text, Color.Black);
+        }
+
+        // TODO IN A NORMAL WAY!!!
+        public string getInputFileName()
+        {
+            return textBoxInputFileName.Text;
+        }
+
+        public string getOutputFileName()
+        {
+            return textBoxOutputFileName.Text;
+        }
+
+        public bool getCheckerExact()
+        {
+            return checkBoxExactChecking.Checked;
         }
     }
 }

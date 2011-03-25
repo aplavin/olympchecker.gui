@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace olympchecker_gui
 {
@@ -18,9 +19,11 @@ namespace olympchecker_gui
             this.options = options;
         }
 
-        public void Compile(string source, string output)
+        public bool Compile(string source, string output)
         {
-            Utils.StartProcess(path, options.Replace("SOURCE", source).Replace("OUTPUT", output));
+            Process process = Utils.StartProcess(path, options.Replace("SOURCE", source).Replace("OUTPUT", output));
+            process.WaitForExit();
+            return (process.ExitCode == 0);
         }
     }
 }
