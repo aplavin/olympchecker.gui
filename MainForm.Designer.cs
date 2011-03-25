@@ -29,10 +29,12 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
+            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
             this.textBoxTimeLimit = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxTestsDirectory = new System.Windows.Forms.TextBox();
+            this.textBoxTestsFolder = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxSourceFile = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -49,25 +51,51 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.проверкаОбновленийToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оПрограммеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonRun = new System.Windows.Forms.Button();
+            this.output = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.pictureTestsFolder);
+            this.groupBox1.Controls.Add(this.pictureSourceCode);
             this.groupBox1.Controls.Add(this.textBoxTimeLimit);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBoxTestsDirectory);
+            this.groupBox1.Controls.Add(this.textBoxTestsFolder);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.textBoxSourceFile);
-            this.groupBox1.Location = new System.Drawing.Point(9, 36);
+            this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(468, 134);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Решение";
+            // 
+            // pictureTestsFolder
+            // 
+            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
+            this.pictureTestsFolder.Name = "pictureTestsFolder";
+            this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
+            this.pictureTestsFolder.TabIndex = 7;
+            this.pictureTestsFolder.TabStop = false;
+            // 
+            // pictureSourceCode
+            // 
+            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
+            this.pictureSourceCode.Name = "pictureSourceCode";
+            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
+            this.pictureSourceCode.TabIndex = 6;
+            this.pictureSourceCode.TabStop = false;
             // 
             // textBoxTimeLimit
             // 
@@ -77,6 +105,7 @@
             this.textBoxTimeLimit.Name = "textBoxTimeLimit";
             this.textBoxTimeLimit.Size = new System.Drawing.Size(89, 20);
             this.textBoxTimeLimit.TabIndex = 5;
+            this.textBoxTimeLimit.Text = " 10";
             // 
             // label3
             // 
@@ -96,13 +125,14 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Папка тестов";
             // 
-            // textBoxTestsDirectory
+            // textBoxTestsFolder
             // 
-            this.textBoxTestsDirectory.AllowDrop = true;
-            this.textBoxTestsDirectory.Location = new System.Drawing.Point(97, 62);
-            this.textBoxTestsDirectory.Name = "textBoxTestsDirectory";
-            this.textBoxTestsDirectory.Size = new System.Drawing.Size(357, 20);
-            this.textBoxTestsDirectory.TabIndex = 2;
+            this.textBoxTestsFolder.AllowDrop = true;
+            this.textBoxTestsFolder.Location = new System.Drawing.Point(97, 62);
+            this.textBoxTestsFolder.Name = "textBoxTestsFolder";
+            this.textBoxTestsFolder.Size = new System.Drawing.Size(331, 20);
+            this.textBoxTestsFolder.TabIndex = 2;
+            this.textBoxTestsFolder.TextChanged += new System.EventHandler(this.textBoxTestsFolder_TextChanged);
             // 
             // label1
             // 
@@ -118,8 +148,9 @@
             this.textBoxSourceFile.AllowDrop = true;
             this.textBoxSourceFile.Location = new System.Drawing.Point(97, 27);
             this.textBoxSourceFile.Name = "textBoxSourceFile";
-            this.textBoxSourceFile.Size = new System.Drawing.Size(357, 20);
+            this.textBoxSourceFile.Size = new System.Drawing.Size(331, 20);
             this.textBoxSourceFile.TabIndex = 0;
+            this.textBoxSourceFile.TextChanged += new System.EventHandler(this.textBoxSourceFile_TextChanged);
             // 
             // groupBox2
             // 
@@ -131,9 +162,9 @@
             this.groupBox2.Controls.Add(this.textBoxOutputFileName);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.textBoxInputFileName);
-            this.groupBox2.Location = new System.Drawing.Point(10, 195);
+            this.groupBox2.Location = new System.Drawing.Point(12, 167);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(466, 162);
+            this.groupBox2.Size = new System.Drawing.Size(468, 162);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Проверка";
@@ -222,7 +253,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(802, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(849, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -238,28 +269,64 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.settingsToolStripMenuItem.Text = "Настройки";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.exitToolStripMenuItem.Text = "Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.проверкаОбновленийToolStripMenuItem,
+            this.оПрограммеToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.helpToolStripMenuItem.Text = "Помощь";
+            // 
+            // проверкаОбновленийToolStripMenuItem
+            // 
+            this.проверкаОбновленийToolStripMenuItem.Name = "проверкаОбновленийToolStripMenuItem";
+            this.проверкаОбновленийToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.проверкаОбновленийToolStripMenuItem.Text = "Проверка обновлений";
+            // 
+            // оПрограммеToolStripMenuItem
+            // 
+            this.оПрограммеToolStripMenuItem.Name = "оПрограммеToolStripMenuItem";
+            this.оПрограммеToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.оПрограммеToolStripMenuItem.Text = "О программе";
+            // 
+            // buttonRun
+            // 
+            this.buttonRun.Location = new System.Drawing.Point(405, 335);
+            this.buttonRun.Name = "buttonRun";
+            this.buttonRun.Size = new System.Drawing.Size(75, 23);
+            this.buttonRun.TabIndex = 3;
+            this.buttonRun.Text = "Начать";
+            this.buttonRun.UseVisualStyleBackColor = true;
+            this.buttonRun.Click += new System.EventHandler(this.buttonRun_Click);
+            // 
+            // output
+            // 
+            this.output.Location = new System.Drawing.Point(499, 27);
+            this.output.Name = "output";
+            this.output.ReadOnly = true;
+            this.output.Size = new System.Drawing.Size(340, 331);
+            this.output.TabIndex = 4;
+            this.output.Text = "";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(802, 375);
+            this.ClientSize = new System.Drawing.Size(849, 365);
+            this.Controls.Add(this.output);
+            this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -269,6 +336,8 @@
             this.Text = "OlympChecker";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -284,7 +353,7 @@
         private System.Windows.Forms.MaskedTextBox textBoxTimeLimit;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxTestsDirectory;
+        private System.Windows.Forms.TextBox textBoxTestsFolder;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxSourceFile;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -301,5 +370,11 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem проверкаОбновленийToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem оПрограммеToolStripMenuItem;
+        private System.Windows.Forms.PictureBox pictureTestsFolder;
+        private System.Windows.Forms.PictureBox pictureSourceCode;
+        private System.Windows.Forms.Button buttonRun;
+        private System.Windows.Forms.RichTextBox output;
     }
 }

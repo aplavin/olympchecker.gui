@@ -97,6 +97,11 @@ namespace olympchecker_gui
 
         public static Compiler GetCompiler(string extension)
         {
+            extension = extension.TrimStart('.');
+            if (!compilers.ContainsKey(extension))
+            {
+                return null;
+            }
             return compilers[extension];
         }
 

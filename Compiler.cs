@@ -7,9 +7,9 @@ namespace olympchecker_gui
 {
     class Compiler
     {
-        private string path;
-        private string options;
-        public string name { get; set; }
+        public string path;
+        public string options;
+        public string name;
 
         public Compiler(string name, string path, string options)
         {
