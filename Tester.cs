@@ -15,7 +15,7 @@ namespace olympchecker_gui
         {
             public string source, testsDir, inputFile, outputFile;
             public int timeLimit;
-            public bool exactChecking;
+            public bool exactChecking, standartIO;
             public Compiler compiler;
         };
         private enum Code {OK, WA, PE, FL, RE, TL};
@@ -23,6 +23,7 @@ namespace olympchecker_gui
         private const string workDir = "work";
         private const string solutionExec = "olympSolution.exe";
         private const string checkerExec = "olympChecker.exe";
+        private const string tempOutput = "tmpfile.out";
         private static List<string> tests;
         private static int testsPassed;
         private static int maxTime;
@@ -30,28 +31,40 @@ namespace olympchecker_gui
 
         private static bool noErrors;
 
-        public static void TestSolution(Parameters parameters) {
+        static Tester()
+        {
+            Directory.CreateDirectory(workDir);
+            Directory.SetCurrentDirectory(workDir);
+        }
+
+        public static void TestSolution(Parameters parameters)
+        {
+            if (parameters.inputFile.Length == 0)
+            {
+                parameters.inputFile = "in";
+            }
+            if (parameters.outputFile.Length == 0)
+            {
+                parameters.outputFile = "out";
+            }
             Tester.parameters = parameters;
 
             tests = new List<string>();
 
             new Thread(doTestSolution).Start();
-
-            Directory.CreateDirectory(workDir);
-            Directory.SetCurrentDirectory(workDir);
         }
 
         private static void doTestSolution()
         {
-            if (!CleanBefore()) { noErrors = false; }
-            if (!CompileSolution()) { noErrors = false; }
-            if (!FindTests()) { noErrors = false; }
+            if (!CleanBefore()) { noErrors = false; return; }
+            if (!CompileSolution()) { noErrors = false; return; }
+            if (!FindTests()) { noErrors = false; return; }
             Utils.PrintLine();
-            if (!PerformTesting()) { noErrors = false; }
+            if (!PerformTesting()) { noErrors = false; return; }
             Utils.PrintLine();
             PrintResult();
             Utils.PrintLine();
-            if (!CleanAfter()) { noErrors = false; }
+            if (!CleanAfter()) { noErrors = false; return; }
 
             noErrors = true;
         }
@@ -76,9 +89,9 @@ namespace olympchecker_gui
                 Utils.PrintLine("[OK]", Color.Green);
                 return true;
             }
-            catch (IOException)
+            catch (Exception ex)
             {
-                Utils.PrintLine("[Ошибка]", Color.Red);
+                Utils.PrintError(ex);
                 return false;
             }
         }
@@ -95,12 +108,12 @@ namespace olympchecker_gui
                     File.Delete(file);
                 }
 
-                Utils.PrintLine("[OK]", Color.Green);
+                Utils.Print("[OK]", Color.Green);
                 return true;
             }
-            catch (IOException)
+            catch (Exception ex)
             {
-                Utils.PrintLine("[Ошибка]", Color.Red);
+                Utils.PrintError(ex);
                 return false;
             }
         }
@@ -148,9 +161,9 @@ namespace olympchecker_gui
                     PrepareTest(test);
                     PerformTest(test);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    Utils.Print("[Ошибка]", Color.Red);
+                    Utils.PrintError(ex);
                     return false;
                 }
             }
@@ -172,14 +185,48 @@ namespace olympchecker_gui
             }
             File.Copy(test, parameters.inputFile);
             File.Copy(test + ".a", "correct.out");
+
+            File.Delete(tempOutput);
+            File.Delete(parameters.outputFile);
         }
 
-        private static void PerformTest(string test)
+        private struct TwoStreams
+        {
+            public StreamReader streamReader;
+            public StreamWriter streamWriter;
+        };
+        private static void CopyStream(object twoStreams)
+        {
+            TwoStreams streams = (TwoStreams)twoStreams;
+            while (streams.streamReader.Peek() != -1)
+            {
+                streams.streamWriter.WriteLine(streams.streamReader.ReadLine());
+            }
+            streams.streamReader.Close();
+            streams.streamWriter.Close();
+        }
+
+        public static void PerformTest(string test)
         {
             Process process = Utils.StartProcess(solutionExec, "", true);
+
+            if (parameters.standartIO)
+            {
+                TwoStreams streamsOutToFile = new TwoStreams();
+                streamsOutToFile.streamReader = process.StandardOutput;
+                streamsOutToFile.streamWriter = new StreamWriter(tempOutput, false);
+                new Thread(CopyStream).Start(streamsOutToFile);
+
+                TwoStreams streamsFileToIn = new TwoStreams();
+                Utils.WaitForFile(parameters.inputFile);
+                streamsFileToIn.streamReader = new StreamReader(parameters.inputFile);
+                streamsFileToIn.streamWriter = process.StandardInput;
+                new Thread(CopyStream).Start(streamsFileToIn);
+            }
+
             while (!process.HasExited && process.UserProcessorTime.TotalMilliseconds <= parameters.timeLimit)
             {
-                Thread.Sleep(20);
+                Thread.Sleep(50);
             }
             if (!process.HasExited)
             {
@@ -210,6 +257,10 @@ namespace olympchecker_gui
             }
             else
             {
+                if (parameters.standartIO && !File.Exists(parameters.outputFile))
+                {
+                    File.Move(tempOutput, parameters.outputFile);
+                }
                 code = CheckAnswer(parameters.inputFile, "correct.out", parameters.outputFile);
             }
 
@@ -265,7 +316,7 @@ namespace olympchecker_gui
 
         private static void PrintResult()
         {
-            Utils.Print("Тестирование завершено: ");
+            Utils.Print("Тестирование завершено:\t");
             Color color;
             int score = 100 * testsPassed / tests.Count;
             if (score == 100)
@@ -282,9 +333,9 @@ namespace olympchecker_gui
             }
             Utils.PrintLine(testsPassed + "/" + tests.Count + " (" + score + "/100)", color);
 
-            Utils.Print("Максимальное время (без учёта TL) ");
+            Utils.Print("Максимальное время (без учёта TL):\t");
             Utils.PrintLine(maxTime + " ms",
-                maxTime <= parameters.timeLimit * 3 / 4 ? Color.Green : Color.Yellow);
+                maxTime <= parameters.timeLimit * 3 / 4 ? Color.Green : Color.Orange);
         }
 
     }

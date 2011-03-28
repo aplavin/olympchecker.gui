@@ -16,9 +16,13 @@ namespace olympchecker_gui
             Process process = new Process();
             process.StartInfo.FileName = fileName;
             process.StartInfo.Arguments = args;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            //process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.RedirectStandardOutput = true;
             process.Start();
-            process.PriorityClass = ProcessPriorityClass.RealTime;
+            process.PriorityClass = ProcessPriorityClass.High;
             if (oneProcessor)
             {
                 process.ProcessorAffinity = new IntPtr(1 << 0);
@@ -80,6 +84,29 @@ namespace olympchecker_gui
             return result;
         }
 
+        public static string[] GuessFileNames(string sourceFile)
+        {
+            string inputFile = "", outputFile = "";
+
+            StreamReader reader = new StreamReader(sourceFile);
+            string[] strings = reader.ReadToEnd().Replace('\'', '"').Split('"');
+            reader.Close();
+
+            for (int i = 1; i < strings.Length; i += 2)
+            {
+                if (strings[i].EndsWith(".in")) { inputFile = strings[i]; }
+                else if (strings[i].EndsWith(".out")) { outputFile = strings[i]; }
+
+                else if (strings[i].StartsWith("in")) { inputFile = strings[i]; }
+                else if (strings[i].StartsWith("out")) { outputFile = strings[i]; }
+
+                else if (strings[i].Contains("in")) { inputFile = strings[i]; }
+                else if (strings[i].Contains("out")) { outputFile = strings[i]; }
+            }
+
+            return new string[2] { inputFile, outputFile };
+        }
+
         #region FS
 		public static bool FileAvailable(string fileName)
         {
@@ -121,6 +148,7 @@ namespace olympchecker_gui
         } 
 	#endregion
 
+        #region Printing
         public static void Error(string message)
         {
             MessageBox.Show(message, "Произошла ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -152,6 +180,12 @@ namespace olympchecker_gui
         {
             Program.mainForm.PrintLine(text);
         }
+
+        public static void PrintError(Exception exception)
+        {
+            PrintLine("[Ошибка: " + exception.ToString() + "]", Color.Red);
+        } 
+        #endregion
 
     }
 }

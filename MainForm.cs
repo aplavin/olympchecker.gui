@@ -39,6 +39,12 @@ namespace olympchecker_gui
         private void textBoxSourceFile_TextChanged(object sender, EventArgs e)
         {
             pictureSourceCode.Image = (File.Exists(textBoxSourceFile.Text) ? Icons.OK : Icons.Error);
+            if (File.Exists(textBoxSourceFile.Text))
+            {
+                string[] filesIO = Utils.GuessFileNames(textBoxSourceFile.Text);
+                textBoxInputFileName.Text = filesIO[0];
+                textBoxOutputFileName.Text = filesIO[1];
+            }
         }
 
         private void textBoxSourceFile_DragEnter(object sender, DragEventArgs e)
@@ -59,6 +65,7 @@ namespace olympchecker_gui
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
                 textBoxSourceFile.Text = filePaths[0];
+                textBoxSourceFile.SelectionStart = textBoxSourceFile.Text.Length;
             }
         }
 
@@ -67,6 +74,7 @@ namespace olympchecker_gui
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 textBoxSourceFile.Text = openFileDialog.FileName;
+                textBoxSourceFile.SelectionStart = textBoxSourceFile.Text.Length;
             }
         }
         #endregion
@@ -95,6 +103,7 @@ namespace olympchecker_gui
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
                 textBoxTestsFolder.Text = filePaths[0];
+                textBoxTestsFolder.SelectionStart = textBoxTestsFolder.Text.Length;
             }
         }
 
@@ -103,6 +112,7 @@ namespace olympchecker_gui
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 textBoxTestsFolder.Text = folderBrowserDialog.SelectedPath;
+                textBoxTestsFolder.SelectionStart = textBoxTestsFolder.Text.Length;
             }
         }
         #endregion
@@ -127,9 +137,10 @@ namespace olympchecker_gui
             Tester.Parameters parameters = new Tester.Parameters();
             parameters.source = textBoxSourceFile.Text;
             parameters.testsDir = textBoxTestsFolder.Text;
-            parameters.timeLimit = 1000; // TODO
+            parameters.timeLimit = (int) (Double.Parse(textBoxTimeLimit.Text) * 1000);
             parameters.compiler = compiler;
             parameters.exactChecking = checkBoxExactChecking.Checked;
+            parameters.standartIO = checkBoxUseStandartIO.Checked;
             parameters.inputFile = textBoxInputFileName.Text;
             parameters.outputFile = textBoxOutputFileName.Text;
 
@@ -243,6 +254,11 @@ namespace olympchecker_gui
                 outputFile = "out" + inputFile.Substring(2);
             }
             textBoxOutputFileName.Text = outputFile;
+        }
+
+        private void OpenWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utils.StartProcess("explorer", "work");
         }
 
     }
