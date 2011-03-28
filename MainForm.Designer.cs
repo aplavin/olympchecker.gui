@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pictureTimeLimit = new System.Windows.Forms.PictureBox();
+            this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
+            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
             this.textBoxTimeLimit = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,7 +48,10 @@
             this.textBoxOutputFileName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxInputFileName = new System.Windows.Forms.TextBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,18 +62,12 @@
             this.output = new System.Windows.Forms.RichTextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.pictureTimeLimit = new System.Windows.Forms.PictureBox();
-            this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
-            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
-            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -86,6 +87,33 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Решение";
+            // 
+            // pictureTimeLimit
+            // 
+            this.pictureTimeLimit.Image = global::olympchecker_gui.Icons.OK;
+            this.pictureTimeLimit.Location = new System.Drawing.Point(214, 96);
+            this.pictureTimeLimit.Name = "pictureTimeLimit";
+            this.pictureTimeLimit.Size = new System.Drawing.Size(20, 20);
+            this.pictureTimeLimit.TabIndex = 8;
+            this.pictureTimeLimit.TabStop = false;
+            // 
+            // pictureTestsFolder
+            // 
+            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
+            this.pictureTestsFolder.Name = "pictureTestsFolder";
+            this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
+            this.pictureTestsFolder.TabIndex = 7;
+            this.pictureTestsFolder.TabStop = false;
+            // 
+            // pictureSourceCode
+            // 
+            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
+            this.pictureSourceCode.Name = "pictureSourceCode";
+            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
+            this.pictureSourceCode.TabIndex = 6;
+            this.pictureSourceCode.TabStop = false;
             // 
             // textBoxTimeLimit
             // 
@@ -226,6 +254,8 @@
             this.textBoxOutputFileName.Name = "textBoxOutputFileName";
             this.textBoxOutputFileName.Size = new System.Drawing.Size(112, 20);
             this.textBoxOutputFileName.TabIndex = 2;
+            this.textBoxOutputFileName.Click += new System.EventHandler(this.textBoxOutputFileName_Enter);
+            this.textBoxOutputFileName.Enter += new System.EventHandler(this.textBoxOutputFileName_Enter);
             // 
             // label4
             // 
@@ -243,16 +273,42 @@
             this.textBoxInputFileName.Name = "textBoxInputFileName";
             this.textBoxInputFileName.Size = new System.Drawing.Size(112, 20);
             this.textBoxInputFileName.TabIndex = 0;
+            this.textBoxInputFileName.Click += new System.EventHandler(this.textBoxInputFileName_Enter);
+            this.textBoxInputFileName.TextChanged += new System.EventHandler(this.textBoxInputFileName_TextChanged);
+            this.textBoxInputFileName.Enter += new System.EventHandler(this.textBoxInputFileName_Enter);
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.файлToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(849, 24);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(850, 24);
+            this.menuStrip.TabIndex = 2;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.настройкиToolStripMenuItem,
+            this.выходToolStripMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // настройкиToolStripMenuItem
+            // 
+            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
+            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.настройкиToolStripMenuItem.Text = "Настройки";
+            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // выходToolStripMenuItem
+            // 
+            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.выходToolStripMenuItem.Text = "Выход";
+            this.выходToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -310,10 +366,13 @@
             // 
             // output
             // 
+            this.output.BackColor = System.Drawing.SystemColors.Control;
+            this.output.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.output.Location = new System.Drawing.Point(499, 27);
+            this.output.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.output.Name = "output";
             this.output.ReadOnly = true;
-            this.output.Size = new System.Drawing.Size(340, 331);
+            this.output.Size = new System.Drawing.Size(351, 336);
             this.output.TabIndex = 4;
             this.output.Text = "";
             // 
@@ -327,79 +386,31 @@
             this.folderBrowserDialog.Description = "Выберите папку, в которой содержатся тесты к задаче";
             this.folderBrowserDialog.ShowNewFolderButton = false;
             // 
-            // pictureTimeLimit
-            // 
-            this.pictureTimeLimit.Image = global::olympchecker_gui.Icons.OK;
-            this.pictureTimeLimit.Location = new System.Drawing.Point(214, 96);
-            this.pictureTimeLimit.Name = "pictureTimeLimit";
-            this.pictureTimeLimit.Size = new System.Drawing.Size(20, 20);
-            this.pictureTimeLimit.TabIndex = 8;
-            this.pictureTimeLimit.TabStop = false;
-            // 
-            // pictureTestsFolder
-            // 
-            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
-            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
-            this.pictureTestsFolder.Name = "pictureTestsFolder";
-            this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
-            this.pictureTestsFolder.TabIndex = 7;
-            this.pictureTestsFolder.TabStop = false;
-            // 
-            // pictureSourceCode
-            // 
-            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
-            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
-            this.pictureSourceCode.Name = "pictureSourceCode";
-            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
-            this.pictureSourceCode.TabIndex = 6;
-            this.pictureSourceCode.TabStop = false;
-            // 
-            // файлToolStripMenuItem
-            // 
-            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.настройкиToolStripMenuItem,
-            this.выходToolStripMenuItem});
-            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.файлToolStripMenuItem.Text = "Файл";
-            // 
-            // настройкиToolStripMenuItem
-            // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
-            this.настройкиToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
-            // выходToolStripMenuItem
-            // 
-            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.выходToolStripMenuItem.Text = "Выход";
-            this.выходToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(849, 365);
+            this.ClientSize = new System.Drawing.Size(850, 365);
             this.Controls.Add(this.output);
             this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.menuStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "OlympChecker";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -423,7 +434,7 @@
         private System.Windows.Forms.TextBox textBoxInputFileName;
         private System.Windows.Forms.TextBox textBoxCustomCheckerSource;
         private System.Windows.Forms.CheckBox checkBoxExactChecking;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;

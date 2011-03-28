@@ -1,15 +1,23 @@
 ﻿
-using System.Drawing;
-using System.IO;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Threading;
-using System;
 
 namespace olympchecker_gui
 {
+
     static class Tester
     {
+        public struct Parameters
+        {
+            public string source, testsDir, inputFile, outputFile;
+            public int timeLimit;
+            public bool exactChecking;
+            public Compiler compiler;
+        };
         private enum Code {OK, WA, PE, FL, RE, TL};
         private static string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
         private const string workDir = "work";
@@ -18,18 +26,12 @@ namespace olympchecker_gui
         private static List<string> tests;
         private static int testsPassed;
         private static int maxTime;
-        private static Compiler compiler;
-        private static string source;
-        private static string testsDir;
-        private static int timelimit;
+        private static Parameters parameters;
 
-        private static bool result;
+        private static bool noErrors;
 
-        public static void TestSolution(string _source, string _testsDir, int _timelimit, Compiler _compiler) {
-            source = _source;
-            testsDir = _testsDir;
-            compiler = _compiler;
-            timelimit = _timelimit;
+        public static void TestSolution(Parameters parameters) {
+            Tester.parameters = parameters;
 
             tests = new List<string>();
 
@@ -41,13 +43,17 @@ namespace olympchecker_gui
 
         private static void doTestSolution()
         {
-            if (!CleanBefore()) { result = false; }
-            if (!CompileSolution()) { result = false; }
-            if (!FindTests()) { result = false; }
-            if (!PerformTesting()) { result = false; }
-            if (!CleanAfter()) { result = false; }
+            if (!CleanBefore()) { noErrors = false; }
+            if (!CompileSolution()) { noErrors = false; }
+            if (!FindTests()) { noErrors = false; }
+            Utils.PrintLine();
+            if (!PerformTesting()) { noErrors = false; }
+            Utils.PrintLine();
+            PrintResult();
+            Utils.PrintLine();
+            if (!CleanAfter()) { noErrors = false; }
 
-            result = true;
+            noErrors = true;
         }
 
         private static bool CleanBefore()
@@ -102,7 +108,7 @@ namespace olympchecker_gui
         private static bool CompileSolution()
         {
             Utils.Print("Компилирую решение...\t");
-            if (compiler.Compile(source, solutionExec))
+            if (parameters.compiler.Compile(parameters.source, solutionExec))
             {
                 Utils.PrintLine("[OK]", Color.Green);
                 return true;
@@ -116,8 +122,8 @@ namespace olympchecker_gui
 
         private static bool FindTests()
         {
-            Utils.Print("Поиск тестов...");
-            foreach (string file in Directory.GetFiles(testsDir))
+            Utils.Print("Поиск тестов...\t");
+            foreach (string file in Directory.GetFiles(parameters.testsDir))
             {
                 if (file.IndexOf('.') == -1 && File.Exists(file + ".a"))
                 {
@@ -154,25 +160,24 @@ namespace olympchecker_gui
 
         private static void PrepareTest(string test)
         {
-            string fin = Program.mainForm.getInputFileName();
-            if (File.Exists(fin))
+            if (File.Exists(parameters.inputFile))
             {
-                Utils.WaitForFile(fin);
-                File.Delete(fin);
+                Utils.WaitForFile(parameters.inputFile);
+                File.Delete(parameters.inputFile);
             }
             if (File.Exists("correct.out"))
             {
                 Utils.WaitForFile("correct.out");
                 File.Delete("correct.out");
             }
-            File.Copy(test, fin);
+            File.Copy(test, parameters.inputFile);
             File.Copy(test + ".a", "correct.out");
         }
 
         private static void PerformTest(string test)
         {
             Process process = Utils.StartProcess(solutionExec, "", true);
-            while (!process.HasExited && process.UserProcessorTime.TotalMilliseconds <= timelimit)
+            while (!process.HasExited && process.UserProcessorTime.TotalMilliseconds <= parameters.timeLimit)
             {
                 Thread.Sleep(20);
             }
@@ -187,7 +192,7 @@ namespace olympchecker_gui
             bool gotRE = (process.ExitCode != 0); // if we killed process, it will appear too
 
             int time = (int)process.UserProcessorTime.TotalMilliseconds;
-            bool gotTL = (time > timelimit);
+            bool gotTL = (time > parameters.timeLimit);
             if (!gotTL)
             {
                 maxTime = Math.Max(maxTime, time);
@@ -205,7 +210,7 @@ namespace olympchecker_gui
             }
             else
             {
-                code = CheckAnswer(Program.mainForm.getInputFileName(), "correct.out", Program.mainForm.getOutputFileName());
+                code = CheckAnswer(parameters.inputFile, "correct.out", parameters.outputFile);
             }
 
             Directory.CreateDirectory(resultDirs[(int)code]);
@@ -223,7 +228,7 @@ namespace olympchecker_gui
         {
             //if (Config.CheckerStandart)
             //{
-                return Utils.CompareFiles(answerFile, outFile, Program.mainForm.getCheckerExact()) ? Code.OK : Code.WA;
+                return Utils.CompareFiles(answerFile, outFile, parameters.exactChecking) ? Code.OK : Code.WA;
             //}
             //else
             //{
@@ -253,7 +258,7 @@ namespace olympchecker_gui
                     Utils.PrintLine("[RE - " + time + " ms]", Color.Red);
                     break;
                 case Code.TL:
-                    Utils.PrintLine("[TL - >" + timelimit + " ms]", Color.Red);
+                    Utils.PrintLine("[TL - >" + parameters.timeLimit + " ms]", Color.Red);
                     break;
             }
         }
@@ -273,13 +278,13 @@ namespace olympchecker_gui
             }
             else
             {
-                color = Color.Yellow;
+                color = Color.Orange;
             }
             Utils.PrintLine(testsPassed + "/" + tests.Count + " (" + score + "/100)", color);
 
             Utils.Print("Максимальное время (без учёта TL) ");
             Utils.PrintLine(maxTime + " ms",
-                maxTime <= timelimit * 3 / 4 ? Color.Green : Color.Yellow);
+                maxTime <= parameters.timeLimit * 3 / 4 ? Color.Green : Color.Yellow);
         }
 
     }

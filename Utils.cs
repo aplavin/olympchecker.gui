@@ -44,7 +44,7 @@ namespace olympchecker_gui
                 {
                     outStr = outReader.ReadLine();
                 }
-                catch (Exception) { outStr = ""; }
+                catch (IOException) { outStr = ""; }
 
                 if (!exact)
                 {
@@ -148,7 +148,7 @@ namespace olympchecker_gui
             Program.mainForm.PrintLine(text, color);
         }
 
-        public static void PrintLine(string text)
+        public static void PrintLine(string text = "")
         {
             Program.mainForm.PrintLine(text);
         }

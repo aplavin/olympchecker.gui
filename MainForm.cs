@@ -12,7 +12,7 @@ namespace olympchecker_gui
         public MainForm()
         {
             InitializeComponent();
-            Width = 510;
+            Width = 500;
         }
 
         private void radioButtonCustomChecker_CheckedChanged(object sender, EventArgs e)
@@ -114,15 +114,27 @@ namespace olympchecker_gui
 
         private void buttonRun_Click(object sender, EventArgs e)
         {
-            Width = 865;
+            Width = 860;
             output.Clear();
+
             if (!CheckCorrect())
             {
                 return;
             }
 
             Compiler compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
-            Tester.TestSolution(textBoxSourceFile.Text, textBoxTestsFolder.Text, 1000, compiler);
+
+            Tester.Parameters parameters = new Tester.Parameters();
+            parameters.source = textBoxSourceFile.Text;
+            parameters.testsDir = textBoxTestsFolder.Text;
+            parameters.timeLimit = 1000; // TODO
+            parameters.compiler = compiler;
+            parameters.exactChecking = checkBoxExactChecking.Checked;
+            parameters.inputFile = textBoxInputFileName.Text;
+            parameters.outputFile = textBoxOutputFileName.Text;
+
+            PrintLine();
+            Tester.TestSolution(parameters);
         }
 
         private bool CheckCorrect()
@@ -176,7 +188,6 @@ namespace olympchecker_gui
         }
 
         delegate void PrintToRichEdit(string text, Color color);
-
         public void Print(string text, Color color)
         {
             if (output.InvokeRequired)
@@ -186,6 +197,8 @@ namespace olympchecker_gui
             }
             else
             {
+                output.Focus();
+                output.SelectionStart = output.Text.Length;
                 output.SelectionColor = color;
                 output.AppendText(text);
                 //output.ScrollToCaret();
@@ -202,25 +215,34 @@ namespace olympchecker_gui
             Print(text + "\n", color);
         }
 
-        public void PrintLine(string text)
+        public void PrintLine(string text = "")
         {
             PrintLine(text, Color.Black);
         }
 
-        // TODO IN A NORMAL WAY!!!
-        public string getInputFileName()
+        private void textBoxInputFileName_Enter(object sender, EventArgs e)
         {
-            return textBoxInputFileName.Text;
+            textBoxInputFileName.SelectAll();
         }
 
-        public string getOutputFileName()
+        private void textBoxOutputFileName_Enter(object sender, EventArgs e)
         {
-            return textBoxOutputFileName.Text;
+            textBoxOutputFileName.SelectAll();
         }
 
-        public bool getCheckerExact()
+        private void textBoxInputFileName_TextChanged(object sender, EventArgs e)
         {
-            return checkBoxExactChecking.Checked;
+            string inputFile = textBoxInputFileName.Text;
+            string outputFile = textBoxOutputFileName.Text;
+            if (inputFile.EndsWith(".in"))
+            {
+                outputFile = inputFile.Substring(0, inputFile.Length - 3) + ".out";
+            }
+            else if (inputFile.StartsWith("in"))
+            {
+                outputFile = "out" + inputFile.Substring(2);
+            }
+            textBoxOutputFileName.Text = outputFile;
         }
 
     }
