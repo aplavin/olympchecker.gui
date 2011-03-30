@@ -224,7 +224,9 @@ namespace olympchecker_gui
                 new Thread(CopyStream).Start(streamsFileToIn);
             }
 
-            while (!process.HasExited && process.UserProcessorTime.TotalMilliseconds <= parameters.timeLimit)
+            while (!process.HasExited &&
+                process.UserProcessorTime.TotalMilliseconds <= parameters.timeLimit &&
+                (DateTime.Now - process.StartTime).TotalMilliseconds <= parameters.timeLimit * 2)
             {
                 Thread.Sleep(50);
             }
@@ -318,7 +320,11 @@ namespace olympchecker_gui
         {
             Utils.Print("Тестирование завершено:\t");
             Color color;
-            int score = 100 * testsPassed / tests.Count;
+            int score = 0;
+            if (tests.Count != 0)
+            {
+                score = 100 * testsPassed / tests.Count;
+            }
             if (score == 100)
             {
                 color = Color.Green;

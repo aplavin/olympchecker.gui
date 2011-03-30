@@ -104,15 +104,17 @@
             this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
             this.pictureTestsFolder.TabIndex = 7;
             this.pictureTestsFolder.TabStop = false;
+            this.toolTip.SetToolTip(this.pictureTestsFolder, "Не введено имя папки");
             // 
-            // pictureSourceCode
+            // pictureSourceFile
             // 
             this.pictureSourceFile.Image = global::olympchecker_gui.Icons.Warning;
             this.pictureSourceFile.Location = new System.Drawing.Point(434, 27);
-            this.pictureSourceFile.Name = "pictureSourceCode";
+            this.pictureSourceFile.Name = "pictureSourceFile";
             this.pictureSourceFile.Size = new System.Drawing.Size(20, 20);
             this.pictureSourceFile.TabIndex = 6;
             this.pictureSourceFile.TabStop = false;
+            this.toolTip.SetToolTip(this.pictureSourceFile, "Не введено имя файла");
             // 
             // textBoxTimeLimit
             // 
@@ -227,7 +229,6 @@
             // radioButtonCustomChecker
             // 
             this.radioButtonCustomChecker.AutoSize = true;
-            this.radioButtonCustomChecker.Enabled = false;
             this.radioButtonCustomChecker.Location = new System.Drawing.Point(9, 136);
             this.radioButtonCustomChecker.Name = "radioButtonCustomChecker";
             this.radioButtonCustomChecker.Size = new System.Drawing.Size(158, 17);
@@ -370,9 +371,6 @@
             // 
             // toolTip
             // 
-            this.toolTip.SetToolTip(pictureSourceFile, "Не введено имя файла");
-            this.toolTip.SetToolTip(pictureTestsFolder, "Не введено имя папки");
-            this.toolTip.SetToolTip(pictureTimeLimit, null);
             this.toolTip.ToolTipTitle = "Ошибка";
             // 
             // MainForm
@@ -380,7 +378,7 @@
             this.AcceptButton = this.buttonRun;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(850, 433);
+            this.ClientSize = new System.Drawing.Size(850, 380);
             this.Controls.Add(this.output);
             this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.groupBox2);

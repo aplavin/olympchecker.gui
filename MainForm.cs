@@ -117,6 +117,11 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Папка не существует";
             }
+            else if (Directory.GetFiles(text).Length == 0)
+            {
+                image = Icons.Error;
+                tooltip = "Папка пуста";
+            }
             else if (!text.Contains("tests"))
             {
                 image = Icons.Warning;
@@ -238,7 +243,7 @@ namespace olympchecker_gui
         private bool CheckFolder(string folder, string name)
         {
             Print(name + "...\t");
-            if (Directory.Exists(folder))
+            if (Directory.Exists(folder) && Directory.GetFiles(folder).Length != 0)
             {
                 PrintLine("[OK]", Color.Green);
                 return true;
