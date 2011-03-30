@@ -18,7 +18,7 @@ namespace olympchecker_gui
             public bool exactChecking, standartIO;
             public Compiler compiler;
         };
-        private enum Code {OK, WA, PE, FL, RE, TL};
+        private enum Code { OK, WA, PE, FL, RE, TL };
         private static string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
         private const string workDir = "work";
         private const string solutionExec = "olympSolution.exe";
@@ -161,7 +161,7 @@ namespace olympchecker_gui
                     PrepareTest(test);
                     PerformTest(test);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Utils.PrintError(ex);
                     return false;
@@ -281,7 +281,7 @@ namespace olympchecker_gui
         {
             //if (Config.CheckerStandart)
             //{
-                return Utils.CompareFiles(answerFile, outFile, parameters.exactChecking) ? Code.OK : Code.WA;
+            return Utils.CompareFiles(answerFile, outFile, parameters.exactChecking) ? Code.OK : Code.WA;
             //}
             //else
             //{
@@ -290,7 +290,7 @@ namespace olympchecker_gui
             //    return process.ExitCode;
             //}
         }
-        
+
         private static void PrintTestResult(Code code, int time)
         {
             switch (code)

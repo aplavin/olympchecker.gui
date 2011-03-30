@@ -2,14 +2,14 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Nini.Config;
 using System.Windows.Forms;
 
 namespace olympchecker_gui
 {
-    public class CompilerInfo {
+    public class CompilerInfo
+    {
         public string name, extensions, path, options;
 
         public CompilerInfo(string name, string extensions, string path, string options)
@@ -26,7 +26,7 @@ namespace olympchecker_gui
 
         private const string fileName = "settings.ini";
         private static List<CompilerInfo> compilerInfos = new List<CompilerInfo>();
-        private static Dictionary<string, Compiler> compilers = new Dictionary<string,Compiler>();
+        private static Dictionary<string, Compiler> compilers = new Dictionary<string, Compiler>();
         private static IConfigSource configSource;
 
         public static void Load()
@@ -68,7 +68,7 @@ namespace olympchecker_gui
             try
             {
                 configSource.Configs.Clear();
-                for (int i = 0; i < compilerInfos.Count(); i++)
+                for (int i = 0; i < compilerInfos.Count; i++)
                 {
                     configSource.AddConfig("Compiler_" + i);
                     configSource.Configs["Compiler_" + i].Set("Name", compilerInfos[i].name);

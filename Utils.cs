@@ -108,7 +108,7 @@ namespace olympchecker_gui
         }
 
         #region FS
-		public static bool FileAvailable(string fileName)
+        public static bool FileAvailable(string fileName)
         {
             FileStream fs;
             if (!File.Exists(fileName))
@@ -145,8 +145,8 @@ namespace olympchecker_gui
             {
                 Print("Не могу получить доступ к '" + fileName + "'", Color.Red);
             }
-        } 
-	#endregion
+        }
+        #endregion
 
         #region Printing
         public static void Error(string message)
@@ -184,7 +184,7 @@ namespace olympchecker_gui
         public static void PrintError(Exception exception)
         {
             PrintLine("[Ошибка: " + exception.ToString() + "]", Color.Red);
-        } 
+        }
         #endregion
 
     }

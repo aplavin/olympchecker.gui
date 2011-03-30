@@ -134,7 +134,7 @@ namespace olympchecker_gui
 
             pictureTestsFolder.Image = image;
             toolTip.SetToolTip(pictureTestsFolder, tooltip);
-        } 
+        }
 
         private void textBoxTestsFolder_DragEnter(object sender, DragEventArgs e)
         {
@@ -171,7 +171,7 @@ namespace olympchecker_gui
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
             double t;
-            pictureTimeLimit.Image = (Double.TryParse(textBoxTimeLimit.Text, out t) ?  Icons.OK : Icons.Error);
+            pictureTimeLimit.Image = (Double.TryParse(textBoxTimeLimit.Text, out t) ? Icons.OK : Icons.Error);
         }
 
         private void buttonRun_Click(object sender, EventArgs e)
@@ -194,7 +194,7 @@ namespace olympchecker_gui
             Tester.Parameters parameters = new Tester.Parameters();
             parameters.source = textBoxSourceFile.Text;
             parameters.testsDir = textBoxTestsFolder.Text;
-            parameters.timeLimit = (int) (Double.Parse(textBoxTimeLimit.Text) * 1000);
+            parameters.timeLimit = (int)(Double.Parse(textBoxTimeLimit.Text) * 1000);
             parameters.compiler = compiler;
             parameters.exactChecking = checkBoxExactChecking.Checked;
             parameters.standartIO = checkBoxUseStandartIO.Checked;
@@ -315,7 +315,14 @@ namespace olympchecker_gui
 
         private void OpenWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utils.StartProcess("explorer", "work");
+            if (Directory.Exists("work"))
+            {
+                Utils.StartProcess("explorer", "work");
+            }
+            else
+            {
+                Utils.StartProcess("explorer", ".");
+            }
         }
 
     }
