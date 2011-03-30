@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureTimeLimit = new System.Windows.Forms.PictureBox();
             this.pictureTestsFolder = new System.Windows.Forms.PictureBox();
-            this.pictureSourceCode = new System.Windows.Forms.PictureBox();
+            this.pictureSourceFile = new System.Windows.Forms.PictureBox();
             this.textBoxTimeLimit = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -59,10 +60,11 @@
             this.output = new System.Windows.Forms.RichTextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceFile)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +73,7 @@
             // 
             this.groupBox1.Controls.Add(this.pictureTimeLimit);
             this.groupBox1.Controls.Add(this.pictureTestsFolder);
-            this.groupBox1.Controls.Add(this.pictureSourceCode);
+            this.groupBox1.Controls.Add(this.pictureSourceFile);
             this.groupBox1.Controls.Add(this.textBoxTimeLimit);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -96,7 +98,7 @@
             // 
             // pictureTestsFolder
             // 
-            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Error;
+            this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Warning;
             this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
             this.pictureTestsFolder.Name = "pictureTestsFolder";
             this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
@@ -105,18 +107,18 @@
             // 
             // pictureSourceCode
             // 
-            this.pictureSourceCode.Image = global::olympchecker_gui.Icons.Error;
-            this.pictureSourceCode.Location = new System.Drawing.Point(434, 27);
-            this.pictureSourceCode.Name = "pictureSourceCode";
-            this.pictureSourceCode.Size = new System.Drawing.Size(20, 20);
-            this.pictureSourceCode.TabIndex = 6;
-            this.pictureSourceCode.TabStop = false;
+            this.pictureSourceFile.Image = global::olympchecker_gui.Icons.Warning;
+            this.pictureSourceFile.Location = new System.Drawing.Point(434, 27);
+            this.pictureSourceFile.Name = "pictureSourceCode";
+            this.pictureSourceFile.Size = new System.Drawing.Size(20, 20);
+            this.pictureSourceFile.TabIndex = 6;
+            this.pictureSourceFile.TabStop = false;
             // 
             // textBoxTimeLimit
             // 
             this.textBoxTimeLimit.HidePromptOnLeave = true;
             this.textBoxTimeLimit.Location = new System.Drawing.Point(147, 96);
-            this.textBoxTimeLimit.Mask = "0.#";
+            this.textBoxTimeLimit.Mask = "0.9";
             this.textBoxTimeLimit.Name = "textBoxTimeLimit";
             this.textBoxTimeLimit.Size = new System.Drawing.Size(61, 20);
             this.textBoxTimeLimit.TabIndex = 2;
@@ -366,12 +368,19 @@
             this.folderBrowserDialog.Description = "Выберите папку, в которой содержатся тесты к задаче";
             this.folderBrowserDialog.ShowNewFolderButton = false;
             // 
+            // toolTip
+            // 
+            this.toolTip.SetToolTip(pictureSourceFile, "Не введено имя файла");
+            this.toolTip.SetToolTip(pictureTestsFolder, "Не введено имя папки");
+            this.toolTip.SetToolTip(pictureTimeLimit, null);
+            this.toolTip.ToolTipTitle = "Ошибка";
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonRun;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(850, 375);
+            this.ClientSize = new System.Drawing.Size(850, 433);
             this.Controls.Add(this.output);
             this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.groupBox2);
@@ -387,7 +396,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceCode)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureSourceFile)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.menuStrip.ResumeLayout(false);
@@ -417,7 +426,7 @@
         private System.Windows.Forms.CheckBox checkBoxExactChecking;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.PictureBox pictureTestsFolder;
-        private System.Windows.Forms.PictureBox pictureSourceCode;
+        private System.Windows.Forms.PictureBox pictureSourceFile;
         private System.Windows.Forms.Button buttonRun;
         private System.Windows.Forms.RichTextBox output;
         private System.Windows.Forms.PictureBox pictureTimeLimit;
@@ -429,5 +438,6 @@
         private System.Windows.Forms.CheckBox checkBoxUseStandartIO;
         private System.Windows.Forms.ToolStripMenuItem openWorkDirToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }

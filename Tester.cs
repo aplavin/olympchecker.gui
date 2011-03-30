@@ -208,7 +208,7 @@ namespace olympchecker_gui
 
         public static void PerformTest(string test)
         {
-            Process process = Utils.StartProcess(solutionExec, "", true);
+            Process process = Utils.StartProcess(solutionExec, String.Empty, true);
 
             if (parameters.standartIO)
             {

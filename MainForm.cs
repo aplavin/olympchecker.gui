@@ -38,13 +38,35 @@ namespace olympchecker_gui
         #region textBoxSourceFile
         private void textBoxSourceFile_TextChanged(object sender, EventArgs e)
         {
-            pictureSourceCode.Image = (File.Exists(textBoxSourceFile.Text) ? Icons.OK : Icons.Error);
-            if (File.Exists(textBoxSourceFile.Text))
+            string text = textBoxSourceFile.Text;
+            Image image = null;
+            string tooltip = null;
+            if (text == String.Empty)
             {
+                image = Icons.Warning;
+                tooltip = "Не введено имя файла";
+            }
+            else if (!File.Exists(text))
+            {
+                image = Icons.Error;
+                tooltip = "Файл не существует";
+            }
+            else if (Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text)) == null)
+            {
+                image = Icons.Error;
+                tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(textBoxSourceFile.Text) + "\"";
+            }
+            else
+            {
+                image = Icons.OK;
+
                 string[] filesIO = Utils.GuessFileNames(textBoxSourceFile.Text);
                 textBoxInputFileName.Text = filesIO[0];
                 textBoxOutputFileName.Text = filesIO[1];
             }
+
+            pictureSourceFile.Image = image;
+            toolTip.SetToolTip(pictureSourceFile, tooltip);
         }
 
         private void textBoxSourceFile_DragEnter(object sender, DragEventArgs e)
@@ -82,7 +104,31 @@ namespace olympchecker_gui
         #region textBoxTestsFolder
         private void textBoxTestsFolder_TextChanged(object sender, EventArgs e)
         {
-            pictureTestsFolder.Image = (Directory.Exists(textBoxTestsFolder.Text) ? Icons.OK : Icons.Error);
+            string text = textBoxTestsFolder.Text;
+            Image image = null;
+            string tooltip = null;
+            if (text == String.Empty)
+            {
+                image = Icons.Warning;
+                tooltip = "Не введено имя папки";
+            }
+            else if (!Directory.Exists(text))
+            {
+                image = Icons.Error;
+                tooltip = "Папка не существует";
+            }
+            else if (!text.Contains("tests"))
+            {
+                image = Icons.Warning;
+                tooltip = "Скорее всего, выбрана неверная папка";
+            }
+            else
+            {
+                image = Icons.OK;
+            }
+
+            pictureTestsFolder.Image = image;
+            toolTip.SetToolTip(pictureTestsFolder, tooltip);
         } 
 
         private void textBoxTestsFolder_DragEnter(object sender, DragEventArgs e)
@@ -119,13 +165,19 @@ namespace olympchecker_gui
 
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
-            pictureTimeLimit.Image = (textBoxTimeLimit.MaskCompleted ?  Icons.OK : Icons.Error);
+            double t;
+            pictureTimeLimit.Image = (Double.TryParse(textBoxTimeLimit.Text, out t) ?  Icons.OK : Icons.Error);
         }
 
         private void buttonRun_Click(object sender, EventArgs e)
         {
             Width = 860;
             output.Clear();
+
+            if (textBoxInputFileName.Text == String.Empty || textBoxOutputFileName.Text == String.Empty)
+            {
+                checkBoxUseStandartIO.Checked = true;
+            }
 
             if (!CheckCorrect())
             {

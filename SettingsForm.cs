@@ -55,11 +55,11 @@ namespace olympchecker_gui
 
         private void buttonAddCompiler_Click(object sender, EventArgs e)
         {
-            compilers.Add(new CompilerInfo("", "", "", ""));
+            compilers.Add(new CompilerInfo(String.Empty, String.Empty, String.Empty, String.Empty));
 
             comboBoxCompilerName.Items.Add("Новый");
             comboBoxCompilerName.SelectedIndex = comboBoxCompilerName.Items.Count - 1;
-            textBoxCompilerName.Text = textBoxSourceExtensions.Text = textBoxCompiler.Text = textBoxCompilerOptions.Text = "";
+            textBoxCompilerName.Text = textBoxSourceExtensions.Text = textBoxCompiler.Text = textBoxCompilerOptions.Text = String.Empty;
         }
 
         private void buttonApply_Click(object sender, EventArgs e)

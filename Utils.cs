@@ -48,7 +48,7 @@ namespace olympchecker_gui
                 {
                     outStr = outReader.ReadLine();
                 }
-                catch (IOException) { outStr = ""; }
+                catch (IOException) { outStr = String.Empty; }
 
                 if (!exact)
                 {
@@ -86,7 +86,7 @@ namespace olympchecker_gui
 
         public static string[] GuessFileNames(string sourceFile)
         {
-            string inputFile = "", outputFile = "";
+            string inputFile = String.Empty, outputFile = String.Empty;
 
             StreamReader reader = new StreamReader(sourceFile);
             string[] strings = reader.ReadToEnd().Replace('\'', '"').Split('"');
