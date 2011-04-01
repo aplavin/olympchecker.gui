@@ -25,7 +25,7 @@ namespace olympchecker_gui
 
         public bool Compile(string source, string output)
         {
-            Process process = Utils.StartProcess(path, options.Replace("SOURCE", source).Replace("OUTPUT", output));
+            Process process = Utils.StartProcess(path, options.Replace("SOURCE", "\"" + source + "\"").Replace("OUTPUT", "\"" + output + "\""));
             process.WaitForExit();
             return (process.ExitCode == 0);
         }

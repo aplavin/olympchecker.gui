@@ -15,9 +15,10 @@ namespace olympchecker_gui
         public struct Parameters
         {
             public string source, testsDir, inputFile, outputFile;
+            public string checker;
             public int timeLimit;
-            public bool exactChecking, standartIO;
-            public Compiler compiler;
+            public bool internalCheck, exactCheck, standartIO;
+            public Compiler compiler, compilerChecker;
         };
         private enum Code { OK, WA, PE, FL, RE, TL };
         private static string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
@@ -62,6 +63,7 @@ namespace olympchecker_gui
         {
             if (!CleanBefore()) { noErrors = false; return; }
             if (!CompileSolution()) { noErrors = false; return; }
+            if (!CompileChecker()) { noErrors = false; return; }
             if (!FindTests()) { noErrors = false; return; }
             Utils.PrintLine();
             if (!PerformTesting()) { noErrors = false; return; }
@@ -137,14 +139,29 @@ namespace olympchecker_gui
             }
         }
 
+        private static bool CompileChecker()
+        {
+            Utils.Print("Компилирую проверяющую программу...\t");
+            if (parameters.compilerChecker.Compile(parameters.checker, checkerExec))
+            {
+                Utils.PrintLine("[OK]", Color.Green);
+                return true;
+            }
+            else
+            {
+                Utils.PrintLine("[Ошибка]", Color.Red);
+                return false;
+            }
+        }
+
         private static bool FindTests()
         {
             Utils.Print("Поиск тестов...\t");
 
             tests = (from file in Directory.GetFiles(parameters.testsDir)
-                    where !file.EndsWith(".a") && File.Exists(file + ".a")
-                    orderby file ascending
-                    select file)
+                     where !file.EndsWith(".a") && File.Exists(file + ".a")
+                     orderby file ascending
+                     select file)
                     .ToList();
 
             Utils.PrintLine("[" + tests.Count + "]", Color.Green);
@@ -282,16 +299,16 @@ namespace olympchecker_gui
 
         private static Code CheckAnswer(string inputFile, string answerFile, string outFile)
         {
-            //if (Config.CheckerStandart)
-            //{
-            return Utils.CompareFiles(answerFile, outFile, parameters.exactChecking) ? Code.OK : Code.WA;
-            //}
-            //else
-            //{
-            //    Process process = Utils.StartProcess(checkerExec, inputFile + " " + answerFile + " " + outFile);
-            //    process.WaitForExit();
-            //    return process.ExitCode;
-            //}
+            if (parameters.internalCheck)
+            {
+                return Utils.CompareFiles(answerFile, outFile, parameters.exactCheck) ? Code.OK : Code.WA;
+            }
+            else
+            {
+                Process process = Utils.StartProcess(checkerExec, inputFile + " " + answerFile + " " + outFile);
+                process.WaitForExit();
+                return (Code)process.ExitCode;
+            }
         }
 
         private static void PrintTestResult(Code code, int time)

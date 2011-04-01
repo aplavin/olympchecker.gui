@@ -61,12 +61,14 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureChecker = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureTestsFolder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureSourceFile)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureChecker)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -99,7 +101,7 @@
             // pictureTestsFolder
             // 
             this.pictureTestsFolder.Image = global::olympchecker_gui.Icons.Warning;
-            this.pictureTestsFolder.Location = new System.Drawing.Point(434, 62);
+            this.pictureTestsFolder.Location = new System.Drawing.Point(442, 62);
             this.pictureTestsFolder.Name = "pictureTestsFolder";
             this.pictureTestsFolder.Size = new System.Drawing.Size(20, 20);
             this.pictureTestsFolder.TabIndex = 7;
@@ -109,7 +111,7 @@
             // pictureSourceFile
             // 
             this.pictureSourceFile.Image = global::olympchecker_gui.Icons.Warning;
-            this.pictureSourceFile.Location = new System.Drawing.Point(434, 27);
+            this.pictureSourceFile.Location = new System.Drawing.Point(442, 27);
             this.pictureSourceFile.Name = "pictureSourceFile";
             this.pictureSourceFile.Size = new System.Drawing.Size(20, 20);
             this.pictureSourceFile.TabIndex = 6;
@@ -151,7 +153,7 @@
             this.textBoxTestsFolder.AllowDrop = true;
             this.textBoxTestsFolder.Location = new System.Drawing.Point(96, 62);
             this.textBoxTestsFolder.Name = "textBoxTestsFolder";
-            this.textBoxTestsFolder.Size = new System.Drawing.Size(332, 20);
+            this.textBoxTestsFolder.Size = new System.Drawing.Size(340, 20);
             this.textBoxTestsFolder.TabIndex = 1;
             this.textBoxTestsFolder.TextChanged += new System.EventHandler(this.textBoxTestsFolder_TextChanged);
             this.textBoxTestsFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragDrop);
@@ -172,7 +174,7 @@
             this.textBoxSourceFile.AllowDrop = true;
             this.textBoxSourceFile.Location = new System.Drawing.Point(97, 27);
             this.textBoxSourceFile.Name = "textBoxSourceFile";
-            this.textBoxSourceFile.Size = new System.Drawing.Size(331, 20);
+            this.textBoxSourceFile.Size = new System.Drawing.Size(339, 20);
             this.textBoxSourceFile.TabIndex = 0;
             this.textBoxSourceFile.TextChanged += new System.EventHandler(this.textBoxSourceFile_TextChanged);
             this.textBoxSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragDrop);
@@ -181,6 +183,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.pictureChecker);
             this.groupBox2.Controls.Add(this.checkBoxUseStandartIO);
             this.groupBox2.Controls.Add(this.checkBoxExactChecking);
             this.groupBox2.Controls.Add(this.textBoxCustomCheckerSource);
@@ -223,8 +226,12 @@
             this.textBoxCustomCheckerSource.Enabled = false;
             this.textBoxCustomCheckerSource.Location = new System.Drawing.Point(173, 135);
             this.textBoxCustomCheckerSource.Name = "textBoxCustomCheckerSource";
-            this.textBoxCustomCheckerSource.Size = new System.Drawing.Size(280, 20);
+            this.textBoxCustomCheckerSource.Size = new System.Drawing.Size(263, 20);
             this.textBoxCustomCheckerSource.TabIndex = 5;
+            this.textBoxCustomCheckerSource.TextChanged += new System.EventHandler(this.textBoxCustomCheckerSource_TextChanged);
+            this.textBoxCustomCheckerSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxCustomCheckerSource_DragDrop);
+            this.textBoxCustomCheckerSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxCustomCheckerSource_DragEnter);
+            this.textBoxCustomCheckerSource.DoubleClick += new System.EventHandler(this.textBoxCustomCheckerSource_DoubleClick);
             // 
             // radioButtonCustomChecker
             // 
@@ -373,6 +380,16 @@
             // 
             this.toolTip.ToolTipTitle = "Ошибка";
             // 
+            // pictureChecker
+            // 
+            this.pictureChecker.Image = global::olympchecker_gui.Icons.Warning;
+            this.pictureChecker.Location = new System.Drawing.Point(442, 135);
+            this.pictureChecker.Name = "pictureChecker";
+            this.pictureChecker.Size = new System.Drawing.Size(20, 20);
+            this.pictureChecker.TabIndex = 8;
+            this.pictureChecker.TabStop = false;
+            this.toolTip.SetToolTip(this.pictureChecker, "Не введено имя папки");
+            // 
             // MainForm
             // 
             this.AcceptButton = this.buttonRun;
@@ -399,6 +416,7 @@
             this.groupBox2.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureChecker)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -437,5 +455,6 @@
         private System.Windows.Forms.ToolStripMenuItem openWorkDirToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.PictureBox pictureChecker;
     }
 }

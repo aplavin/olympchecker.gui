@@ -167,6 +167,68 @@ namespace olympchecker_gui
         }
         #endregion
 
+        #region textBoxCustomCheckerSource
+        private void textBoxCustomCheckerSource_TextChanged(object sender, EventArgs e)
+        {
+            string text = textBoxCustomCheckerSource.Text;
+            Image image = null;
+            string tooltip = null;
+            if (String.IsNullOrEmpty(text))
+            {
+                image = Icons.Warning;
+                tooltip = "Не введено имя файла";
+            }
+            else if (!File.Exists(text))
+            {
+                image = Icons.Error;
+                tooltip = "Файл не существует";
+            }
+            else if (Settings.GetCompiler(Path.GetExtension(text)) == null)
+            {
+                image = Icons.Error;
+                tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(text) + "\"";
+            }
+            else
+            {
+                image = Icons.OK;
+            }
+
+            pictureChecker.Image = image;
+            toolTip.SetToolTip(pictureChecker, tooltip);
+        }
+
+        private void textBoxCustomCheckerSource_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void textBoxCustomCheckerSource_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                textBoxCustomCheckerSource.Text = filePaths[0];
+                textBoxCustomCheckerSource.SelectionStart = textBoxCustomCheckerSource.Text.Length;
+            }
+        }
+
+        private void textBoxCustomCheckerSource_DoubleClick(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                textBoxCustomCheckerSource.Text = openFileDialog.FileName;
+                textBoxCustomCheckerSource.SelectionStart = textBoxCustomCheckerSource.Text.Length;
+            }
+        }
+        #endregion
+
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
             double t;
@@ -188,14 +250,16 @@ namespace olympchecker_gui
                 return;
             }
 
-            Compiler compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
 
             Tester.Parameters parameters = new Tester.Parameters();
             parameters.source = textBoxSourceFile.Text;
             parameters.testsDir = textBoxTestsFolder.Text;
             parameters.timeLimit = (int)(Double.Parse(textBoxTimeLimit.Text) * 1000);
-            parameters.compiler = compiler;
-            parameters.exactChecking = checkBoxExactChecking.Checked;
+            parameters.compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
+            parameters.compilerChecker = Settings.GetCompiler(Path.GetExtension(textBoxCustomCheckerSource.Text));
+            parameters.checker = textBoxCustomCheckerSource.Text;
+            parameters.internalCheck = radioButtonInternalChecker.Checked;
+            parameters.exactCheck = checkBoxExactChecking.Checked;
             parameters.standartIO = checkBoxUseStandartIO.Checked;
             parameters.inputFile = textBoxInputFileName.Text;
             parameters.outputFile = textBoxOutputFileName.Text;
@@ -213,13 +277,16 @@ namespace olympchecker_gui
                 return false;
             }
 
-            Compiler compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
-            if (compiler == null)
+            foreach (string ext in new string[] { Path.GetExtension(textBoxSourceFile.Text), Path.GetExtension(textBoxCustomCheckerSource.Text) })
             {
-                PrintLine("Для расширения " + Path.GetExtension(textBoxSourceFile.Text) + " не найден соответствующий компилятор", Color.Red);
-                return false;
+                Compiler compiler = Settings.GetCompiler(ext);
+                if (compiler == null)
+                {
+                    PrintLine("Для расширения " + ext + " не найден соответствующий компилятор", Color.Red);
+                    return false;
+                }
+                CheckFile(compiler.path, "Компилятор (" + compiler.name + ")");
             }
-            CheckFile(compiler.path, "Компилятор (" + compiler.name + ")");
 
             return true;
         }
