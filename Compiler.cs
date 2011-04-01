@@ -1,21 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace olympchecker_gui
 {
     class Compiler
     {
-        public string path;
-        public string options;
-        public string name;
 
-        public Compiler(string name, string path, string options)
+        public string name { get; private set; }
+        public string path { get; private set; }
+        public string options { get; private set; }
+        public string extensions { get; private set; }
+
+        public Compiler(string name, string path, string options, string extensions)
         {
             this.name = name;
             this.path = path;
             this.options = options;
+            this.extensions = ' ' + extensions.ToLower() + ' ';
+        }
+
+        public bool CanCompile(string extension)
+        {
+            return extensions.Contains(' ' + extension.ToLower() + ' ');
         }
 
         public bool Compile(string source, string output)

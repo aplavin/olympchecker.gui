@@ -3,7 +3,6 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using System.Threading;
 
 namespace olympchecker_gui
 {
@@ -41,7 +40,7 @@ namespace olympchecker_gui
             string text = textBoxSourceFile.Text;
             Image image = null;
             string tooltip = null;
-            if (text == String.Empty)
+            if (String.IsNullOrEmpty(text))
             {
                 image = Icons.Warning;
                 tooltip = "Не введено имя файла";
@@ -107,7 +106,7 @@ namespace olympchecker_gui
             string text = textBoxTestsFolder.Text;
             Image image = null;
             string tooltip = null;
-            if (text == String.Empty)
+            if (String.IsNullOrEmpty(text))
             {
                 image = Icons.Warning;
                 tooltip = "Не введено имя папки";
@@ -179,7 +178,7 @@ namespace olympchecker_gui
             Width = 860;
             output.Clear();
 
-            if (textBoxInputFileName.Text == String.Empty || textBoxOutputFileName.Text == String.Empty)
+            if (String.IsNullOrEmpty(textBoxInputFileName.Text) || String.IsNullOrEmpty(textBoxOutputFileName.Text))
             {
                 checkBoxUseStandartIO.Checked = true;
             }

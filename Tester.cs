@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace olympchecker_gui
@@ -20,10 +21,10 @@ namespace olympchecker_gui
         };
         private enum Code { OK, WA, PE, FL, RE, TL };
         private static string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
-        private const string workDir = "work";
-        private const string solutionExec = "olympSolution.exe";
-        private const string checkerExec = "olympChecker.exe";
-        private const string tempOutput = "tmpfile.out";
+        private static readonly string workDir = "work";
+        private static readonly string solutionExec = "olympSolution.exe";
+        private static readonly string checkerExec = "olympChecker.exe";
+        private static readonly string tempOutput = "tmpfile.out";
         private static List<string> tests;
         private static int testsPassed;
         private static int maxTime;
@@ -39,6 +40,10 @@ namespace olympchecker_gui
 
         public static void TestSolution(Parameters parameters)
         {
+            tests = new List<string>();
+            testsPassed = 0;
+            maxTime = 0;
+
             if (parameters.inputFile.Length == 0)
             {
                 parameters.inputFile = "in";
@@ -49,7 +54,6 @@ namespace olympchecker_gui
             }
             Tester.parameters = parameters;
 
-            tests = new List<string>();
 
             new Thread(doTestSolution).Start();
         }
@@ -136,14 +140,13 @@ namespace olympchecker_gui
         private static bool FindTests()
         {
             Utils.Print("Поиск тестов...\t");
-            foreach (string file in Directory.GetFiles(parameters.testsDir))
-            {
-                if (file.IndexOf('.') == -1 && File.Exists(file + ".a"))
-                {
-                    tests.Add(file);
-                }
-            }
-            tests.Sort();
+
+            tests = (from file in Directory.GetFiles(parameters.testsDir)
+                    where !file.EndsWith(".a") && File.Exists(file + ".a")
+                    orderby file ascending
+                    select file)
+                    .ToList();
+
             Utils.PrintLine("[" + tests.Count + "]", Color.Green);
 
             return true;

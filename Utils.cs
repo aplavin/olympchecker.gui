@@ -3,8 +3,8 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace olympchecker_gui
 {
@@ -135,7 +135,7 @@ namespace olympchecker_gui
                 File.Create(fileName);
             }
 
-            int cnt = 100;
+            int cnt = 500;
             while (!FileAvailable(fileName) && cnt > 0)
             {
                 Thread.Sleep(20);

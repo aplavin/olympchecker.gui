@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace olympchecker_gui
 {
     public partial class SettingsForm : Form
     {
 
-        private List<CompilerInfo> compilers;
+        private List<Compiler> compilers;
 
         public SettingsForm()
         {
@@ -26,20 +23,22 @@ namespace olympchecker_gui
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            Settings.SetCompilers(compilers);
+            Settings.compilers = compilers;
             Settings.Save();
             this.Close();
         }
 
         private void SettingsForm_Activated(object sender, EventArgs e)
         {
-            compilers = Settings.GetCompilers();
+            compilers = Settings.compilers;
 
             comboBoxCompilerName.Items.Clear();
-            foreach (CompilerInfo compiler in compilers)
-            {
-                comboBoxCompilerName.Items.Add(compiler.name);
-            }
+            comboBoxCompilerName.Items.AddRange(
+                (from comp in compilers
+                 select comp.name)
+                .ToArray()
+            );
+
             comboBoxCompilerName.SelectedIndex = 0;
         }
 
@@ -54,7 +53,7 @@ namespace olympchecker_gui
 
         private void buttonAddCompiler_Click(object sender, EventArgs e)
         {
-            compilers.Add(new CompilerInfo(String.Empty, String.Empty, String.Empty, String.Empty));
+            compilers.Add(new Compiler(String.Empty, String.Empty, String.Empty, String.Empty));
 
             comboBoxCompilerName.Items.Add("Новый");
             comboBoxCompilerName.SelectedIndex = comboBoxCompilerName.Items.Count - 1;
@@ -64,10 +63,16 @@ namespace olympchecker_gui
         private void buttonApply_Click(object sender, EventArgs e)
         {
             int index = comboBoxCompilerName.SelectedIndex;
-            compilers[index].name = textBoxCompilerName.Text;
+            /*compilers[index].name = textBoxCompilerName.Text;
             compilers[index].extensions = textBoxSourceExtensions.Text;
             compilers[index].path = textBoxCompiler.Text;
-            compilers[index].options = textBoxCompilerOptions.Text;
+            compilers[index].options = textBoxCompilerOptions.Text;*/
+            compilers[index] = new Compiler(
+                textBoxCompilerName.Text,
+                textBoxCompiler.Text,
+                textBoxCompilerOptions.Name,
+                textBoxSourceExtensions.Name
+            );
             comboBoxCompilerName.Items[index] = textBoxCompilerName.Text;
         }
 
