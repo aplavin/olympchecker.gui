@@ -7,10 +7,10 @@ using Nini.Config;
 namespace olympchecker_gui
 {
 
-    static class Settings
+    static class CompilersManager
     {
 
-        private static readonly string fileName = "settings.ini";
+        private static readonly string fileName = "compilers.ini";
         public static List<Compiler> compilers { get; set; }
         private static IConfigSource configSource;
 
@@ -22,7 +22,7 @@ namespace olympchecker_gui
             }
             catch (IOException)
             {
-                Utils.FatalError("Ошибка при открытии файла настроек \"settings.ini\"");
+                Utils.FatalError("Ошибка при открытии файла \"" + fileName + "\"");
             }
 
 
@@ -38,7 +38,7 @@ namespace olympchecker_gui
             }
             catch (Nini.Ini.IniException)
             {
-                Utils.FatalError("Ошибка в формате файла настроек \"settings.ini\"");
+                Utils.FatalError("Ошибка в формате файла \"" + fileName + "\"");
             }
         }
 
@@ -61,7 +61,7 @@ namespace olympchecker_gui
             }
             catch
             {
-                Utils.FatalError("Ошибка при сохранении файла настроек \"settings.ini\"");
+                Utils.FatalError("Ошибка при сохранении файла \"" + fileName + "\"");
             }
         }
 

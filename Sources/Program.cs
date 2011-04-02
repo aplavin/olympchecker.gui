@@ -13,7 +13,7 @@ namespace olympchecker_gui
         [STAThread]
         static void Main()
         {
-            Settings.Load();
+            CompilersManager.Load();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

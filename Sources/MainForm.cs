@@ -16,20 +16,25 @@ namespace olympchecker_gui
 
         private void radioButtonCustomChecker_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxCustomCheckerSource.Enabled = radioButtonCustomChecker.Checked;
+            tbCustomCheckerSource.Enabled = rbCustomChecker.Checked;
         }
 
         private void radioButtonInternalChecker_CheckedChanged(object sender, EventArgs e)
         {
-            checkBoxExactChecking.Enabled = radioButtonInternalChecker.Checked;
+            cbExactChecking.Enabled = rbInternalChecker.Checked;
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void compilersItem_Click(object sender, EventArgs e)
+        {
+            new CompilersForm().ShowDialog();
+        }
+
+        private void settingsItem_Click(object sender, EventArgs e)
         {
             new SettingsForm().ShowDialog();
         }
@@ -37,7 +42,7 @@ namespace olympchecker_gui
         #region textBoxSourceFile
         private void textBoxSourceFile_TextChanged(object sender, EventArgs e)
         {
-            string text = textBoxSourceFile.Text;
+            string text = tbSourceFile.Text;
             Image image = null;
             string tooltip = null;
             if (String.IsNullOrEmpty(text))
@@ -50,22 +55,22 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text)) == null)
+            else if (CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text)) == null)
             {
                 image = Icons.Error;
-                tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(textBoxSourceFile.Text) + "\"";
+                tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(tbSourceFile.Text) + "\"";
             }
             else
             {
                 image = Icons.OK;
 
-                string[] filesIO = Utils.GuessFileNames(textBoxSourceFile.Text);
-                textBoxInputFileName.Text = filesIO[0];
-                textBoxOutputFileName.Text = filesIO[1];
+                string[] filesIO = Utils.GuessFileNames(tbSourceFile.Text);
+                tbInputFileName.Text = filesIO[0];
+                tbOutputFileName.Text = filesIO[1];
             }
 
-            pictureSourceFile.Image = image;
-            toolTip.SetToolTip(pictureSourceFile, tooltip);
+            picSourceFile.Image = image;
+            toolTip.SetToolTip(picSourceFile, tooltip);
         }
 
         private void textBoxSourceFile_DragEnter(object sender, DragEventArgs e)
@@ -85,8 +90,8 @@ namespace olympchecker_gui
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                textBoxSourceFile.Text = filePaths[0];
-                textBoxSourceFile.SelectionStart = textBoxSourceFile.Text.Length;
+                tbSourceFile.Text = filePaths[0];
+                tbSourceFile.SelectionStart = tbSourceFile.Text.Length;
             }
         }
 
@@ -94,8 +99,8 @@ namespace olympchecker_gui
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                textBoxSourceFile.Text = openFileDialog.FileName;
-                textBoxSourceFile.SelectionStart = textBoxSourceFile.Text.Length;
+                tbSourceFile.Text = openFileDialog.FileName;
+                tbSourceFile.SelectionStart = tbSourceFile.Text.Length;
             }
         }
         #endregion
@@ -103,7 +108,7 @@ namespace olympchecker_gui
         #region textBoxTestsFolder
         private void textBoxTestsFolder_TextChanged(object sender, EventArgs e)
         {
-            string text = textBoxTestsFolder.Text;
+            string text = tbTestsFolder.Text;
             Image image = null;
             string tooltip = null;
             if (String.IsNullOrEmpty(text))
@@ -131,8 +136,8 @@ namespace olympchecker_gui
                 image = Icons.OK;
             }
 
-            pictureTestsFolder.Image = image;
-            toolTip.SetToolTip(pictureTestsFolder, tooltip);
+            picTestsFolder.Image = image;
+            toolTip.SetToolTip(picTestsFolder, tooltip);
         }
 
         private void textBoxTestsFolder_DragEnter(object sender, DragEventArgs e)
@@ -152,8 +157,8 @@ namespace olympchecker_gui
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                textBoxTestsFolder.Text = filePaths[0];
-                textBoxTestsFolder.SelectionStart = textBoxTestsFolder.Text.Length;
+                tbTestsFolder.Text = filePaths[0];
+                tbTestsFolder.SelectionStart = tbTestsFolder.Text.Length;
             }
         }
 
@@ -161,8 +166,8 @@ namespace olympchecker_gui
         {
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
-                textBoxTestsFolder.Text = folderBrowserDialog.SelectedPath;
-                textBoxTestsFolder.SelectionStart = textBoxTestsFolder.Text.Length;
+                tbTestsFolder.Text = folderBrowserDialog.SelectedPath;
+                tbTestsFolder.SelectionStart = tbTestsFolder.Text.Length;
             }
         }
         #endregion
@@ -170,7 +175,7 @@ namespace olympchecker_gui
         #region textBoxCustomCheckerSource
         private void textBoxCustomCheckerSource_TextChanged(object sender, EventArgs e)
         {
-            string text = textBoxCustomCheckerSource.Text;
+            string text = tbCustomCheckerSource.Text;
             Image image = null;
             string tooltip = null;
             if (String.IsNullOrEmpty(text))
@@ -183,7 +188,7 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (Settings.GetCompiler(Path.GetExtension(text)) == null)
+            else if (CompilersManager.GetCompiler(Path.GetExtension(text)) == null)
             {
                 image = Icons.Error;
                 tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(text) + "\"";
@@ -193,8 +198,8 @@ namespace olympchecker_gui
                 image = Icons.OK;
             }
 
-            pictureChecker.Image = image;
-            toolTip.SetToolTip(pictureChecker, tooltip);
+            picChecker.Image = image;
+            toolTip.SetToolTip(picChecker, tooltip);
         }
 
         private void textBoxCustomCheckerSource_DragEnter(object sender, DragEventArgs e)
@@ -214,8 +219,8 @@ namespace olympchecker_gui
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                textBoxCustomCheckerSource.Text = filePaths[0];
-                textBoxCustomCheckerSource.SelectionStart = textBoxCustomCheckerSource.Text.Length;
+                tbCustomCheckerSource.Text = filePaths[0];
+                tbCustomCheckerSource.SelectionStart = tbCustomCheckerSource.Text.Length;
             }
         }
 
@@ -223,8 +228,8 @@ namespace olympchecker_gui
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                textBoxCustomCheckerSource.Text = openFileDialog.FileName;
-                textBoxCustomCheckerSource.SelectionStart = textBoxCustomCheckerSource.Text.Length;
+                tbCustomCheckerSource.Text = openFileDialog.FileName;
+                tbCustomCheckerSource.SelectionStart = tbCustomCheckerSource.Text.Length;
             }
         }
         #endregion
@@ -232,7 +237,7 @@ namespace olympchecker_gui
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
             double t;
-            pictureTimeLimit.Image = (Double.TryParse(textBoxTimeLimit.Text, out t) ? Icons.OK : Icons.Error);
+            picTimeLimit.Image = (Double.TryParse(tbTimeLimit.Text, out t) ? Icons.OK : Icons.Error);
         }
 
         private void buttonRun_Click(object sender, EventArgs e)
@@ -240,9 +245,9 @@ namespace olympchecker_gui
             Width = 860;
             output.Clear();
 
-            if (String.IsNullOrEmpty(textBoxInputFileName.Text) || String.IsNullOrEmpty(textBoxOutputFileName.Text))
+            if (String.IsNullOrEmpty(tbInputFileName.Text) || String.IsNullOrEmpty(tbOutputFileName.Text))
             {
-                checkBoxUseStandartIO.Checked = true;
+                cbUseStandartIO.Checked = true;
             }
 
             if (!CheckCorrect())
@@ -252,17 +257,17 @@ namespace olympchecker_gui
 
 
             Tester.Parameters parameters = new Tester.Parameters();
-            parameters.source = textBoxSourceFile.Text;
-            parameters.testsDir = textBoxTestsFolder.Text;
-            parameters.timeLimit = (int)(Double.Parse(textBoxTimeLimit.Text) * 1000);
-            parameters.compiler = Settings.GetCompiler(Path.GetExtension(textBoxSourceFile.Text));
-            parameters.compilerChecker = Settings.GetCompiler(Path.GetExtension(textBoxCustomCheckerSource.Text));
-            parameters.checker = textBoxCustomCheckerSource.Text;
-            parameters.internalCheck = radioButtonInternalChecker.Checked;
-            parameters.exactCheck = checkBoxExactChecking.Checked;
-            parameters.standartIO = checkBoxUseStandartIO.Checked;
-            parameters.inputFile = textBoxInputFileName.Text;
-            parameters.outputFile = textBoxOutputFileName.Text;
+            parameters.source = tbSourceFile.Text;
+            parameters.testsDir = tbTestsFolder.Text;
+            parameters.timeLimit = (int)(Double.Parse(tbTimeLimit.Text) * 1000);
+            parameters.compiler = CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text));
+            parameters.compilerChecker = CompilersManager.GetCompiler(Path.GetExtension(tbCustomCheckerSource.Text));
+            parameters.checker = tbCustomCheckerSource.Text;
+            parameters.internalCheck = rbInternalChecker.Checked;
+            parameters.exactCheck = cbExactChecking.Checked;
+            parameters.standartIO = cbUseStandartIO.Checked;
+            parameters.inputFile = tbInputFileName.Text;
+            parameters.outputFile = tbOutputFileName.Text;
 
             PrintLine();
             Tester.TestSolution(parameters);
@@ -272,14 +277,14 @@ namespace olympchecker_gui
         {
             PrintLine("Проверка доступности файлов:");
 
-            if (!CheckFile(textBoxSourceFile.Text, "Исходный код") || !CheckFolder(textBoxTestsFolder.Text, "Папка тестов"))
+            if (!CheckFile(tbSourceFile.Text, "Исходный код") || !CheckFolder(tbTestsFolder.Text, "Папка тестов"))
             {
                 return false;
             }
 
-            foreach (string ext in new string[] { Path.GetExtension(textBoxSourceFile.Text), Path.GetExtension(textBoxCustomCheckerSource.Text) })
+            foreach (string ext in new string[] { Path.GetExtension(tbSourceFile.Text), Path.GetExtension(tbCustomCheckerSource.Text) })
             {
-                Compiler compiler = Settings.GetCompiler(ext);
+                Compiler compiler = CompilersManager.GetCompiler(ext);
                 if (compiler == null)
                 {
                     PrintLine("Для расширения " + ext + " не найден соответствующий компилятор", Color.Red);
@@ -356,18 +361,18 @@ namespace olympchecker_gui
 
         private void textBoxInputFileName_Enter(object sender, EventArgs e)
         {
-            textBoxInputFileName.SelectAll();
+            tbInputFileName.SelectAll();
         }
 
         private void textBoxOutputFileName_Enter(object sender, EventArgs e)
         {
-            textBoxOutputFileName.SelectAll();
+            tbOutputFileName.SelectAll();
         }
 
         private void textBoxInputFileName_TextChanged(object sender, EventArgs e)
         {
-            string inputFile = textBoxInputFileName.Text;
-            string outputFile = textBoxOutputFileName.Text;
+            string inputFile = tbInputFileName.Text;
+            string outputFile = tbOutputFileName.Text;
             if (inputFile.EndsWith(".in"))
             {
                 outputFile = inputFile.Substring(0, inputFile.Length - 3) + ".out";
@@ -376,10 +381,10 @@ namespace olympchecker_gui
             {
                 outputFile = "out" + inputFile.Substring(2);
             }
-            textBoxOutputFileName.Text = outputFile;
+            tbOutputFileName.Text = outputFile;
         }
 
-        private void OpenWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenWorkDirItem_Click(object sender, EventArgs e)
         {
             if (Directory.Exists("work"))
             {
@@ -388,6 +393,56 @@ namespace olympchecker_gui
             else
             {
                 Utils.StartProcess("explorer", ".");
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            btnStop.PerformClick();
+
+            if (Properties.Settings.Default.AutoSave)
+            {
+                // Save all contols states
+
+                Properties.MainFormState p = Properties.MainFormState.Default;
+
+                p.sourceFile = tbSourceFile.Text;
+                p.testsFolder = tbTestsFolder.Text;
+                p.timeLimit = tbTimeLimit.Text;
+
+                p.inputFile = tbInputFileName.Text;
+                p.outputFile = tbOutputFileName.Text;
+                p.useStandartIO = cbUseStandartIO.Checked;
+
+                p.internalChecker = rbInternalChecker.Checked;
+                p.exactChecking = cbExactChecking.Checked;
+
+                p.customChecker = rbCustomChecker.Checked;
+                p.customCheckerSource = tbCustomCheckerSource.Text;
+            }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.AutoSave)
+            {
+                // Load all contols states
+
+                Properties.MainFormState p = Properties.MainFormState.Default;
+
+                tbSourceFile.Text = p.sourceFile;
+                tbTestsFolder.Text = p.testsFolder;
+                tbTimeLimit.Text = p.timeLimit;
+
+                tbInputFileName.Text = p.inputFile;
+                tbOutputFileName.Text = p.outputFile;
+                cbUseStandartIO.Checked = p.useStandartIO;
+
+                rbInternalChecker.Checked = p.internalChecker;
+                cbExactChecking.Checked = p.exactChecking;
+
+                rbCustomChecker.Checked = p.customChecker;
+                tbCustomCheckerSource.Text = p.customCheckerSource;
             }
         }
 
