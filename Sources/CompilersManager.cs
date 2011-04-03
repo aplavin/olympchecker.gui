@@ -10,7 +10,7 @@ namespace olympchecker_gui
     static class CompilersManager
     {
 
-        private static readonly string fileName = "compilers.ini";
+        private static readonly string fileName = Path.Combine(Directory.GetCurrentDirectory(), "compilers.ini");
         public static List<Compiler> compilers { get; set; }
         private static IConfigSource configSource;
 

@@ -18,15 +18,15 @@ namespace olympchecker_gui
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            comboLanguage.Text = Properties.Settings.Default.Language;
-            cbAutoSave.Checked = Properties.Settings.Default.AutoSave;
+            comboLanguage.Text = SettingsManager.Language;
+            cbAutoSave.Checked = SettingsManager.AutoSaveState;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Language = comboLanguage.Text;
-            Properties.Settings.Default.AutoSave = cbAutoSave.Checked;
-            Properties.Settings.Default.Save();
+            SettingsManager.Language = comboLanguage.Text;
+            SettingsManager.AutoSaveState = cbAutoSave.Checked;
+            SettingsManager.Save();
 
             Close();
         }

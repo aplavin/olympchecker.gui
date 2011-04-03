@@ -68,6 +68,7 @@
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.btnStop = new System.Windows.Forms.Button();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTestsFolder)).BeginInit();
@@ -215,6 +216,7 @@
             this.picChecker.TabIndex = 8;
             this.picChecker.TabStop = false;
             this.toolTip.SetToolTip(this.picChecker, "Не введено имя папки");
+            this.picChecker.Visible = false;
             // 
             // cbUseStandartIO
             // 
@@ -285,7 +287,7 @@
             // tbOutputFileName
             // 
             this.tbOutputFileName.AllowDrop = true;
-            this.tbOutputFileName.Location = new System.Drawing.Point(96, 62);
+            this.tbOutputFileName.Location = new System.Drawing.Point(100, 59);
             this.tbOutputFileName.Name = "tbOutputFileName";
             this.tbOutputFileName.Size = new System.Drawing.Size(112, 20);
             this.tbOutputFileName.TabIndex = 1;
@@ -383,9 +385,11 @@
             this.openHelpItem.Name = "openHelpItem";
             this.openHelpItem.Size = new System.Drawing.Size(199, 22);
             this.openHelpItem.Text = "Открыть помощь";
+            this.openHelpItem.Click += new System.EventHandler(this.openHelpItem_Click);
             // 
             // checkUpdatesItem
             // 
+            this.checkUpdatesItem.Enabled = false;
             this.checkUpdatesItem.Name = "checkUpdatesItem";
             this.checkUpdatesItem.Size = new System.Drawing.Size(199, 22);
             this.checkUpdatesItem.Text = "Проверка обновлений";
@@ -395,16 +399,17 @@
             this.aboutItem.Name = "aboutItem";
             this.aboutItem.Size = new System.Drawing.Size(199, 22);
             this.aboutItem.Text = "О программе";
+            this.aboutItem.Click += new System.EventHandler(this.aboutItem_Click);
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(324, 344);
+            this.btnRun.Location = new System.Drawing.Point(405, 344);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 2;
             this.btnRun.Text = "Начать";
             this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.buttonRun_Click);
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // output
             // 
@@ -414,7 +419,7 @@
             this.output.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.output.Name = "output";
             this.output.ReadOnly = true;
-            this.output.Size = new System.Drawing.Size(351, 349);
+            this.output.Size = new System.Drawing.Size(351, 384);
             this.output.TabIndex = 4;
             this.output.TabStop = false;
             this.output.Text = "";
@@ -436,13 +441,22 @@
             // btnStop
             // 
             this.btnStop.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnStop.Enabled = false;
             this.btnStop.Location = new System.Drawing.Point(405, 344);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 3;
+            this.btnStop.TabStop = false;
             this.btnStop.Text = "Остановить";
             this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(12, 376);
+            this.progressBar.MarqueeAnimationSpeed = 1;
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(468, 23);
+            this.progressBar.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -450,10 +464,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnStop;
-            this.ClientSize = new System.Drawing.Size(850, 380);
+            this.ClientSize = new System.Drawing.Size(850, 411);
+            this.Controls.Add(this.btnRun);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.output);
-            this.Controls.Add(this.btnRun);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip);
@@ -520,5 +535,6 @@
         private System.Windows.Forms.ToolStripMenuItem aboutItem;
         private System.Windows.Forms.ToolStripMenuItem settingsItem;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }

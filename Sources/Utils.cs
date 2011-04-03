@@ -22,7 +22,6 @@ namespace olympchecker_gui
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.Start();
-            process.PriorityClass = ProcessPriorityClass.High;
             if (oneProcessor)
             {
                 process.ProcessorAffinity = new IntPtr(1 << 0);
@@ -108,6 +107,37 @@ namespace olympchecker_gui
         }
 
         #region FS
+
+        public static bool CheckFile(string file, string name)
+        {
+            Print(name + "...\t");
+            if (File.Exists(file))
+            {
+                PrintLine("[OK]", Color.Green);
+                return true;
+            }
+            else
+            {
+                PrintLine("[Не найдено]", Color.Red);
+                return false;
+            }
+        }
+
+        public static bool CheckFolder(string folder, string name)
+        {
+            Print(name + "...\t");
+            if (Directory.Exists(folder) && Directory.GetFiles(folder).Length != 0)
+            {
+                PrintLine("[OK]", Color.Green);
+                return true;
+            }
+            else
+            {
+                PrintLine("[Не найдено]", Color.Red);
+                return false;
+            }
+        }
+
         public static bool FileAvailable(string fileName)
         {
             FileStream fs;
@@ -135,7 +165,7 @@ namespace olympchecker_gui
                 File.Create(fileName);
             }
 
-            int cnt = 500;
+            int cnt = 100;
             while (!FileAvailable(fileName) && cnt > 0)
             {
                 Thread.Sleep(20);
@@ -168,17 +198,17 @@ namespace olympchecker_gui
 
         public static void Print(string text)
         {
-            Program.mainForm.Print(text);
+            Print(text, Color.Black);
         }
 
         public static void PrintLine(string text, Color color)
         {
-            Program.mainForm.PrintLine(text, color);
+            Print(text + "\n", color);
         }
 
         public static void PrintLine(string text = "")
         {
-            Program.mainForm.PrintLine(text);
+            PrintLine(text, Color.Black);
         }
 
         public static void PrintError(Exception exception)

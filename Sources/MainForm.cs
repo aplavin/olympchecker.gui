@@ -1,8 +1,12 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Diagnostics;
+using System.Threading;
 
 namespace olympchecker_gui
 {
@@ -17,6 +21,7 @@ namespace olympchecker_gui
         private void radioButtonCustomChecker_CheckedChanged(object sender, EventArgs e)
         {
             tbCustomCheckerSource.Enabled = rbCustomChecker.Checked;
+            picChecker.Visible = rbCustomChecker.Checked;
         }
 
         private void radioButtonInternalChecker_CheckedChanged(object sender, EventArgs e)
@@ -237,10 +242,24 @@ namespace olympchecker_gui
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
             double t;
-            picTimeLimit.Image = (Double.TryParse(tbTimeLimit.Text, out t) ? Icons.OK : Icons.Error);
+
+            Image image = null;
+            string tooltip = null;
+            if (!Double.TryParse(tbTimeLimit.Text, out t))
+            {
+                image = Icons.Error;
+                tooltip = "Неправильный формат ввода";
+            }
+            else
+            {
+                image = Icons.OK;
+            }
+
+            picTimeLimit.Image = image;
+            toolTip.SetToolTip(picTimeLimit, tooltip);
         }
 
-        private void buttonRun_Click(object sender, EventArgs e)
+        private void btnRun_Click(object sender, EventArgs e)
         {
             Width = 860;
             output.Clear();
@@ -256,107 +275,100 @@ namespace olympchecker_gui
             }
 
 
-            Tester.Parameters parameters = new Tester.Parameters();
-            parameters.source = tbSourceFile.Text;
-            parameters.testsDir = tbTestsFolder.Text;
-            parameters.timeLimit = (int)(Double.Parse(tbTimeLimit.Text) * 1000);
-            parameters.compiler = CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text));
-            parameters.compilerChecker = CompilersManager.GetCompiler(Path.GetExtension(tbCustomCheckerSource.Text));
-            parameters.checker = tbCustomCheckerSource.Text;
-            parameters.internalCheck = rbInternalChecker.Checked;
-            parameters.exactCheck = cbExactChecking.Checked;
-            parameters.standartIO = cbUseStandartIO.Checked;
-            parameters.inputFile = tbInputFileName.Text;
-            parameters.outputFile = tbOutputFileName.Text;
+            Tester.Parameters parameters = new Tester.Parameters()
+            {
+                compiler = CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text)),
+                compilerChecker = CompilersManager.GetCompiler(Path.GetExtension(tbCustomCheckerSource.Text)),
 
-            PrintLine();
+                source = tbSourceFile.Text,
+                testsDir = tbTestsFolder.Text,
+                timeLimit = (int)(Double.Parse(tbTimeLimit.Text) * 1000),
+
+                inputFile = tbInputFileName.Text,
+                outputFile = tbOutputFileName.Text,
+                standartIO = cbUseStandartIO.Checked,
+
+                internalCheck = rbInternalChecker.Checked,
+                exactCheck = cbExactChecking.Checked,
+                checker = tbCustomCheckerSource.Text,
+
+                progressNotifier = UpdateProgress,
+            };
+
+            Utils.PrintLine();
             Tester.TestSolution(parameters);
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            //UseWaitCursor = true;
+
+            //new Thread(Tester.StopTesting).Start();
+            Tester.StopTesting();
+            //MessageBox.Show("StopClick");
+
+            //UseWaitCursor = false;
         }
 
         private bool CheckCorrect()
         {
-            PrintLine("Проверка доступности файлов:");
+            Utils.PrintLine("Проверка доступности файлов:");
 
-            if (!CheckFile(tbSourceFile.Text, "Исходный код") || !CheckFolder(tbTestsFolder.Text, "Папка тестов"))
+            if (!Utils.CheckFile(tbSourceFile.Text, "Исходный код") || !Utils.CheckFolder(tbTestsFolder.Text, "Папка тестов"))
             {
                 return false;
             }
 
-            foreach (string ext in new string[] { Path.GetExtension(tbSourceFile.Text), Path.GetExtension(tbCustomCheckerSource.Text) })
+
             {
+                string ext = Path.GetExtension(tbSourceFile.Text);
                 Compiler compiler = CompilersManager.GetCompiler(ext);
                 if (compiler == null)
                 {
-                    PrintLine("Для расширения " + ext + " не найден соответствующий компилятор", Color.Red);
+                    Utils.PrintLine("Для решения (расширение \"" + ext + "\") не найден соответствующий компилятор", Color.Red);
                     return false;
                 }
-                CheckFile(compiler.path, "Компилятор (" + compiler.name + ")");
+                Utils.CheckFile(compiler.path, "Компилятор решения (" + compiler.name + ")");
+            }
+
+            if (rbCustomChecker.Checked)
+            {
+                Utils.CheckFile(tbCustomCheckerSource.Text, "Проверяющая программа");
+                string ext = Path.GetExtension(tbCustomCheckerSource.Text);
+                Compiler compiler = CompilersManager.GetCompiler(ext);
+                if (compiler == null)
+                {
+                    Utils.PrintLine("Для проверяющей программы (расширение \"" + ext + "\") не найден соответствующий компилятор", Color.Red);
+                    return false;
+                }
+                Utils.CheckFile(compiler.path, "Компилятор проверяющей программы (" + compiler.name + ")");
             }
 
             return true;
         }
 
-        private bool CheckFile(string file, string name)
-        {
-            Print(name + "...\t");
-            if (File.Exists(file))
-            {
-                PrintLine("[OK]", Color.Green);
-                return true;
-            }
-            else
-            {
-                PrintLine("[Не найдено]", Color.Red);
-                return false;
-            }
-        }
-
-        private bool CheckFolder(string folder, string name)
-        {
-            Print(name + "...\t");
-            if (Directory.Exists(folder) && Directory.GetFiles(folder).Length != 0)
-            {
-                PrintLine("[OK]", Color.Green);
-                return true;
-            }
-            else
-            {
-                PrintLine("[Не найдено]", Color.Red);
-                return false;
-            }
-        }
-
         delegate void PrintToRichEdit(string text, Color color);
         public void Print(string text, Color color)
         {
-            if (output.InvokeRequired)
+            try
             {
-                PrintToRichEdit d = new PrintToRichEdit(Print);
-                this.Invoke(d, new object[] { text, color });
+                if (output.InvokeRequired)
+                {
+                    PrintToRichEdit d = new PrintToRichEdit(Print);
+                    this.Invoke(d, new object[] { text, color });
+                }
+                else
+                {
+                    output.Focus();
+                    output.SelectionStart = output.Text.Length;
+                    output.SelectionColor = color;
+                    output.AppendText(text);
+                }
             }
-            else
+            catch
             {
-                output.Focus();
-                output.SelectionStart = output.Text.Length;
-                output.SelectionColor = color;
-                output.AppendText(text);
-                //output.ScrollToCaret();
+                // happens in normal situation: form is closed, but a thread tries to print smth
             }
-        }
-
-        public void Print(string text)
-        {
-            Print(text, Color.Black);
-        }
-
-        public void PrintLine(string text, Color color)
-        {
-            Print(text + "\n", color);
-        }
-
-        public void PrintLine(string text = "")
-        {
-            PrintLine(text, Color.Black);
         }
 
         private void textBoxInputFileName_Enter(object sender, EventArgs e)
@@ -388,62 +400,102 @@ namespace olympchecker_gui
         {
             if (Directory.Exists("work"))
             {
-                Utils.StartProcess("explorer", "work");
+                Process.Start("work");
             }
             else
             {
-                Utils.StartProcess("explorer", ".");
+                Process.Start(".");
             }
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            btnStop.PerformClick();
+            //btnStop.PerformClick();
 
-            if (Properties.Settings.Default.AutoSave)
+            if (SettingsManager.AutoSaveState)
             {
                 // Save all contols states
+                var list = new List<Pair<string, object>>();
 
-                Properties.MainFormState p = Properties.MainFormState.Default;
+                var controlsQ = new Queue<Control>();
+                foreach (Control control in Controls)
+                {
+                    controlsQ.Enqueue(control);
+                }
 
-                p.sourceFile = tbSourceFile.Text;
-                p.testsFolder = tbTestsFolder.Text;
-                p.timeLimit = tbTimeLimit.Text;
+                while (controlsQ.Count > 0)
+                {
+                    Control control = controlsQ.Dequeue();
 
-                p.inputFile = tbInputFileName.Text;
-                p.outputFile = tbOutputFileName.Text;
-                p.useStandartIO = cbUseStandartIO.Checked;
+                    if (control is TextBox)
+                    {
+                        list.Add(new Pair<string, object>(control.Name, control.Text));
+                    }
+                    else if (control is CheckBox || control is RadioButton)
+                    {
+                        list.Add(new Pair<string, object>(control.Name,
+                            (bool)control.GetType().GetProperty("Checked").GetValue(control, null)
+                            ));
+                    }
 
-                p.internalChecker = rbInternalChecker.Checked;
-                p.exactChecking = cbExactChecking.Checked;
+                    foreach (Control c in control.Controls)
+                    {
+                        controlsQ.Enqueue(c);
+                    }
+                }
 
-                p.customChecker = rbCustomChecker.Checked;
-                p.customCheckerSource = tbCustomCheckerSource.Text;
+                list.Sort();
+
+                SettingsManager.MainFormState = list;
+                SettingsManager.Save();
             }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.AutoSave)
+            if (SettingsManager.AutoSaveState && SettingsManager.MainFormState.Count > 0)
             {
-                // Load all contols states
+                foreach (var pair in SettingsManager.MainFormState)
+                {
+                    string controlName = pair.First;
+                    object value = pair.Second;
 
-                Properties.MainFormState p = Properties.MainFormState.Default;
+                    Control control = (Control)this.GetType().GetField(controlName, BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this);
 
-                tbSourceFile.Text = p.sourceFile;
-                tbTestsFolder.Text = p.testsFolder;
-                tbTimeLimit.Text = p.timeLimit;
-
-                tbInputFileName.Text = p.inputFile;
-                tbOutputFileName.Text = p.outputFile;
-                cbUseStandartIO.Checked = p.useStandartIO;
-
-                rbInternalChecker.Checked = p.internalChecker;
-                cbExactChecking.Checked = p.exactChecking;
-
-                rbCustomChecker.Checked = p.customChecker;
-                tbCustomCheckerSource.Text = p.customCheckerSource;
+                    if (value is string)
+                    {
+                        control.Text = value as string;
+                    }
+                    else if (value is bool)
+                    {
+                        control.GetType().GetProperty("Checked").SetValue(control, (bool)value, null);
+                    }
+                }
             }
+        }
+
+        delegate void UpdatePB(int progress, int max);
+        private void UpdateProgress(int progress, int max)
+        {
+            if (progressBar.InvokeRequired)
+            {
+                this.Invoke(new UpdatePB(UpdateProgress), new object[] { progress, max });
+            }
+            else
+            {
+                progressBar.Maximum = max;
+                progressBar.Value = progress;
+            }
+        }
+
+        private void openHelpItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://code.google.com/p/olympchecker/wiki/Help");
+        }
+
+        private void aboutItem_Click(object sender, EventArgs e)
+        {
+            new AboutBox().ShowDialog();
         }
 
     }
