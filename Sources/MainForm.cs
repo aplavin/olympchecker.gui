@@ -102,6 +102,10 @@ namespace olympchecker_gui
 
         private void textBoxSourceFile_DoubleClick(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(tbSourceFile.Text))
+            {
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(tbSourceFile.Text);
+            }
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 tbSourceFile.Text = openFileDialog.FileName;
@@ -169,6 +173,10 @@ namespace olympchecker_gui
 
         private void textBoxTestsFolder_DoubleClick(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(tbTestsFolder.Text))
+            {
+                folderBrowserDialog.SelectedPath = tbTestsFolder.Text;
+            }
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 tbTestsFolder.Text = folderBrowserDialog.SelectedPath;
@@ -231,6 +239,10 @@ namespace olympchecker_gui
 
         private void textBoxCustomCheckerSource_DoubleClick(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(tbCustomCheckerSource.Text))
+            {
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(tbCustomCheckerSource.Text);
+            }
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 tbCustomCheckerSource.Text = openFileDialog.FileName;

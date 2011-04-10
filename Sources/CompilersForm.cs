@@ -136,6 +136,10 @@ namespace olympchecker_gui
 
         private void tbCompiler_DoubleClick(object sender, EventArgs e)
         {
+            if (!String.IsNullOrEmpty(tbCompiler.Text))
+            {
+                openFileDialog.InitialDirectory = Path.GetDirectoryName(tbCompiler.Text);
+            }
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 tbCompiler.Text = openFileDialog.FileName;

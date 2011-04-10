@@ -258,10 +258,14 @@ namespace olympchecker_gui
         private static void CopyStream(object twoStreams)
         {
             TwoStreams streams = (TwoStreams)twoStreams;
-            while (streams.streamReader.Peek() != -1)
+            streams.streamWriter.Write(streams.streamReader.ReadToEnd());
+            /*while (streams.streamReader.Peek() != -1)
             {
-                streams.streamWriter.WriteLine(streams.streamReader.ReadLine());
-            }
+                char[] chs=new char[1000];
+                int cnt = streams.streamReader.Read(chs, 0, 1000);
+                Console.Write(chs, 0, cnt);
+                streams.streamWriter.Write(chs, 0, cnt);
+            }*/
             streams.streamReader.Close();
             streams.streamWriter.Close();
         }
@@ -272,16 +276,16 @@ namespace olympchecker_gui
 
             if (parameters.standartIO)
             {
-                TwoStreams streamsOutToFile = new TwoStreams();
-                streamsOutToFile.streamReader = process.StandardOutput;
-                streamsOutToFile.streamWriter = new StreamWriter(tempOutput, false);
-                new Thread(CopyStream).Start(streamsOutToFile);
-
                 TwoStreams streamsFileToIn = new TwoStreams();
                 Utils.WaitForFile(parameters.inputFile);
                 streamsFileToIn.streamReader = new StreamReader(parameters.inputFile);
                 streamsFileToIn.streamWriter = process.StandardInput;
                 new Thread(CopyStream).Start(streamsFileToIn);
+
+                TwoStreams streamsOutToFile = new TwoStreams();
+                streamsOutToFile.streamReader = process.StandardOutput;
+                streamsOutToFile.streamWriter = new StreamWriter(tempOutput, false);
+                new Thread(CopyStream).Start(streamsOutToFile);
             }
 
             while (!process.HasExited &&
@@ -322,6 +326,7 @@ namespace olympchecker_gui
             {
                 if (parameters.standartIO && !File.Exists(parameters.outputFile))
                 {
+                    Utils.WaitForFile(tempOutput);
                     File.Move(tempOutput, parameters.outputFile);
                 }
                 code = CheckAnswer(parameters.inputFile, "correct.out", parameters.outputFile);
