@@ -23,11 +23,12 @@ namespace olympchecker_gui
             return extensions.Contains(' ' + extension.ToLower() + ' ');
         }
 
-        public bool Compile(string source, string output)
+        public string Compile(string source, string output)
         {
             Process process = Utils.StartProcess(path, options.Replace("SOURCE", "\"" + source + "\"").Replace("OUTPUT", "\"" + output + "\""));
+            string s = process.StandardError.ReadToEnd();
             process.WaitForExit();
-            return (process.ExitCode == 0);
+            return (process.ExitCode == 0 ? null : s);
         }
     }
 }

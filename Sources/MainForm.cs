@@ -7,15 +7,21 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
 
 namespace olympchecker_gui
 {
     public partial class MainForm : Form
     {
+        private readonly Size collapsed = new Size(500, 405);
+        private readonly Size expanded = new Size();
+
         public MainForm()
         {
             InitializeComponent();
-            Width = 500;
+
+            expanded = this.Size;
+            this.Size = collapsed;
         }
 
         private void radioButtonCustomChecker_CheckedChanged(object sender, EventArgs e)
@@ -48,6 +54,8 @@ namespace olympchecker_gui
         private void textBoxSourceFile_TextChanged(object sender, EventArgs e)
         {
             string text = tbSourceFile.Text;
+            string ext = Path.GetExtension(text);
+
             Image image = null;
             string tooltip = null;
             if (String.IsNullOrEmpty(text))
@@ -60,7 +68,7 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text)) == null)
+            else if (!Utils.isExecutable(text) && CompilersManager.GetCompiler(ext) == null)
             {
                 image = Icons.Error;
                 tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(tbSourceFile.Text) + "\"";
@@ -189,6 +197,8 @@ namespace olympchecker_gui
         private void textBoxCustomCheckerSource_TextChanged(object sender, EventArgs e)
         {
             string text = tbCustomCheckerSource.Text;
+            string ext = Path.GetExtension(text);
+
             Image image = null;
             string tooltip = null;
             if (String.IsNullOrEmpty(text))
@@ -201,10 +211,10 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (CompilersManager.GetCompiler(Path.GetExtension(text)) == null)
+            else if (!Utils.isExecutable(text) && CompilersManager.GetCompiler(ext) == null)
             {
                 image = Icons.Error;
-                tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(text) + "\"";
+                tooltip = "Не найден компилятор для расширения \"" + ext + "\"";
             }
             else
             {
@@ -273,8 +283,9 @@ namespace olympchecker_gui
 
         private void btnRun_Click(object sender, EventArgs e)
         {
-            Width = 860;
-            output.Clear();
+            this.Size = expanded;
+
+            listView.Items.Clear();
 
             if (String.IsNullOrEmpty(tbInputFileName.Text) || String.IsNullOrEmpty(tbOutputFileName.Text))
             {
@@ -307,74 +318,96 @@ namespace olympchecker_gui
                 progressNotifier = UpdateProgress,
             };
 
-            Utils.PrintLine();
             Tester.TestSolution(parameters);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            //UseWaitCursor = true;
-
-            //new Thread(Tester.StopTesting).Start();
             Tester.StopTesting();
-            //MessageBox.Show("StopClick");
-
-            //UseWaitCursor = false;
         }
 
         private bool CheckCorrect()
         {
-            Utils.PrintLine("Проверка доступности файлов:");
+            Utils.AddPreparation("Проверка доступности файлов:");
 
-            if (!Utils.CheckFile(tbSourceFile.Text, "Исходный код") || !Utils.CheckFolder(tbTestsFolder.Text, "Папка тестов"))
+            if (!Utils.CheckFile(tbSourceFile.Text, "Файл решения") || !Utils.CheckFolder(tbTestsFolder.Text, "Папка тестов")
+                || (rbCustomChecker.Checked && !Utils.CheckFile(tbCustomCheckerSource.Text, "Проверяющая программа")))
             {
                 return false;
             }
 
-
+            List<string> extensions = new List<string>();
+            if (!Utils.isExecutable(tbSourceFile.Text))
             {
-                string ext = Path.GetExtension(tbSourceFile.Text);
-                Compiler compiler = CompilersManager.GetCompiler(ext);
-                if (compiler == null)
-                {
-                    Utils.PrintLine("Для решения (расширение \"" + ext + "\") не найден соответствующий компилятор", Color.Red);
-                    return false;
-                }
-                Utils.CheckFile(compiler.path, "Компилятор решения (" + compiler.name + ")");
+                extensions.Add(Path.GetExtension(tbSourceFile.Text));
+            }
+            if (rbCustomChecker.Checked && !Utils.isExecutable(tbCustomCheckerSource.Text))
+            {
+                extensions.Add(Path.GetExtension(tbCustomCheckerSource.Text));
             }
 
-            if (rbCustomChecker.Checked)
+            foreach (string ext in extensions.Distinct())
             {
-                Utils.CheckFile(tbCustomCheckerSource.Text, "Проверяющая программа");
-                string ext = Path.GetExtension(tbCustomCheckerSource.Text);
                 Compiler compiler = CompilersManager.GetCompiler(ext);
                 if (compiler == null)
                 {
-                    Utils.PrintLine("Для проверяющей программы (расширение \"" + ext + "\") не найден соответствующий компилятор", Color.Red);
+                    Utils.AddPreparation(String.Format("Компилятор для расширения \"{0}\"...", ext));
+                    Utils.AddRes("[Не найден]", Color.Red, String.Format("В настройках не указан компилятор для расширения \"{0}\"", ext));
                     return false;
                 }
-                Utils.CheckFile(compiler.path, "Компилятор проверяющей программы (" + compiler.name + ")");
+                Utils.CheckFile(compiler.path, "Компилятор " + compiler.name);
             }
 
             return true;
         }
 
-        delegate void PrintToRichEdit(string text, Color color);
-        public void Print(string text, Color color)
+        delegate void AddToListView(string text, int group, Color color);
+        public void AddItem(string text, int group, Color color)
         {
             try
             {
-                if (output.InvokeRequired)
+                if (listView.InvokeRequired)
                 {
-                    PrintToRichEdit d = new PrintToRichEdit(Print);
-                    this.Invoke(d, new object[] { text, color });
+                    AddToListView d = new AddToListView(AddItem);
+                    this.Invoke(d, new object[] { text, group, color });
                 }
                 else
                 {
-                    output.Focus();
-                    output.SelectionStart = output.Text.Length;
-                    output.SelectionColor = color;
-                    output.AppendText(text);
+                    var item = new ListViewItem(text, listView.Groups[group])
+                    {
+                        ForeColor = color,
+                        UseItemStyleForSubItems = false,
+                    };
+                    listView.Items.Add(item);
+                    item.EnsureVisible();
+                }
+            }
+            catch
+            {
+                // happens in normal situation: form is closed, but a thread tries to print smth
+            }
+        }
+
+        delegate void AddResultToListView(string text, Color color, string tooltip);
+        public void AddResult(string text, Color color, string tooltip = "")
+        {
+            try
+            {
+                if (listView.InvokeRequired)
+                {
+                    AddResultToListView d = new AddResultToListView(AddResult);
+                    this.Invoke(d, new object[] { text, color, tooltip });
+                }
+                else
+                {
+                    ListViewItem item = listView.Items[listView.Items.Count - 1];
+                    if (item.SubItems.Count > 1)
+                    {
+                        // another result is already added to this item
+                        return;
+                    }
+                    item.ToolTipText = tooltip;
+                    item.SubItems.Add(text, color, listView.BackColor, listView.Font);
                 }
             }
             catch
@@ -508,6 +541,31 @@ namespace olympchecker_gui
         private void aboutItem_Click(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog();
+        }
+
+        private void checkUpdatesItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://code.google.com/p/olympchecker/wiki/Downloads");
+        }
+
+        private void listView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count > 0)
+            {
+                ListViewItem item = listView.SelectedItems[0];
+                string res = null;
+                if (item.SubItems.Count > 1)
+                {
+                    richTextBox.ForeColor = item.SubItems[1].ForeColor;
+                    res = item.SubItems[1].Text;
+                }
+                richTextBox.Text = (String.IsNullOrEmpty(item.ToolTipText) ? "" : String.Format("Дополнительная информация о {0} {1}:\n{2}", item.Text, res, item.ToolTipText));
+            }
+        }
+
+        private void btnSwitchSize_Click(object sender, EventArgs e)
+        {
+            this.Size = (this.Size == collapsed ? expanded : collapsed);
         }
 
     }

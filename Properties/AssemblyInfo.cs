@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OlympChecker")]
-[assembly: AssemblyCopyright("Copyright © Alexander Plavin, 2011")]
+[assembly: AssemblyCopyright("© Александр Плавин, 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -5,22 +5,29 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace olympchecker_gui
 {
     static class Utils
     {
+        private static readonly string[] execExtensions = { ".exe", ".bat", ".com" };
+
+        public static bool isExecutable(string fileName)
+        {
+            return execExtensions.Contains(Path.GetExtension(fileName));
+        }
 
         public static Process StartProcess(string fileName, string args = "", bool oneProcessor = false)
         {
             Process process = new Process();
             process.StartInfo.FileName = fileName;
             process.StartInfo.Arguments = args;
-            //process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
             process.Start();
             if (oneProcessor)
             {
@@ -29,58 +36,105 @@ namespace olympchecker_gui
             return process;
         }
 
-        public static bool CompareFiles(string answerFile, string outFile, bool exact)
+        public static String CopyOrCompile(string source, string output)
         {
-            Utils.WaitForFile(answerFile);
-            StreamReader answerReader = new StreamReader(answerFile);
-
-            Utils.WaitForFile(outFile);
-            StreamReader outReader = new StreamReader(outFile);
-
-            bool result = true;
-            while (!answerReader.EndOfStream)
+            string extension = Path.GetExtension(source);
+            if (execExtensions.Contains(extension))
             {
-                string ansStr = answerReader.ReadLine();
-
-                string outStr;
                 try
                 {
-                    outStr = outReader.ReadLine();
+                    File.Copy(source, output, true);
+                    return null;
                 }
-                catch (IOException) { outStr = String.Empty; }
-
-                if (!exact)
+                catch
                 {
-                    try
-                    {
-                        while (ansStr.Contains("  "))
-                        {
-                            ansStr = ansStr.Replace("  ", " ");
-                        }
-                        ansStr = ansStr.Trim();
-                    }
-                    catch (NullReferenceException) { }
-
-                    try
-                    {
-                        while (outStr.Contains("  "))
-                        {
-                            outStr = outStr.Replace("  ", " ");
-                        }
-                        outStr = outStr.Trim();
-                    }
-                    catch (NullReferenceException) { }
-                }
-
-                if (ansStr != outStr)
-                {
-                    result = false;
+                    return "Ошибка при копировании файла";
                 }
             }
-            answerReader.Close();
-            outReader.Close();
+            else
+            {
+                string s = CompilersManager.GetCompiler(extension).Compile(source, output);
+                return (s == null ? null : "Ошибка компиляции:\n" + s);
+            }
+        }
 
-            return result;
+        public static bool CompareFiles(string answerFile, string outFile, bool exact, out string additionalInfo)
+        {
+            Utils.WaitForFile(answerFile);
+            Utils.WaitForFile(outFile);
+
+            int maxLen = 100;
+
+            using (StreamReader answerReader = new StreamReader(answerFile),
+            outReader = new StreamReader(outFile))
+            {
+                int stringNum = 0;
+
+                while (!answerReader.EndOfStream)
+                {
+                    stringNum++;
+
+                    string ansStr = answerReader.ReadLine();
+
+                    string outStr;
+                    try
+                    {
+                        outStr = outReader.ReadLine();
+                    }
+                    catch (IOException) { outStr = String.Empty; }
+
+                    if (!exact)
+                    {
+                        try
+                        {
+                            while (ansStr.Contains("  "))
+                            {
+                                ansStr = ansStr.Replace("  ", " ");
+                            }
+                            ansStr = ansStr.Trim();
+                        }
+                        catch (NullReferenceException) { }
+
+                        try
+                        {
+                            while (outStr.Contains("  "))
+                            {
+                                outStr = outStr.Replace("  ", " ");
+                            }
+                            outStr = outStr.Trim();
+                        }
+                        catch (NullReferenceException) { }
+                    }
+
+                    if (ansStr != outStr)
+                    {
+                        additionalInfo = String.Format("Неверно выведены данные в строке №{0}\n", stringNum);
+
+                        if (ansStr.Length <= maxLen)
+                        {
+                            additionalInfo += String.Format("Ожидалось:\n{0}\n", ansStr);
+                        }
+                        else
+                        {
+                            additionalInfo += String.Format("Ожидалось (длина {1}):\n{0} ...\n", ansStr.Substring(0, maxLen), ansStr.Length);
+                        }
+
+                        if (outStr.Length <= maxLen)
+                        {
+                            additionalInfo += String.Format("Выведено:\n{0}", outStr);
+                        }
+                        else
+                        {
+                            additionalInfo += String.Format("Выведено (длина {1}):\n{0} ...", outStr.Substring(0, maxLen), outStr.Length);
+                        }
+
+                        return false;
+                    }
+                }
+
+                additionalInfo = String.Format("Все данные выведены верно (строк: {0})", stringNum);
+                return true;
+            }
         }
 
         public static string[] GuessFileNames(string sourceFile)
@@ -110,30 +164,30 @@ namespace olympchecker_gui
 
         public static bool CheckFile(string file, string name)
         {
-            Print(name + "...\t");
+            AddPreparation(String.Format("{0}...", name));
             if (File.Exists(file))
             {
-                PrintLine("[OK]", Color.Green);
+                AddRes("[OK]", Color.Green);
                 return true;
             }
             else
             {
-                PrintLine("[Не найдено]", Color.Red);
+                AddRes("[Не найдено]", Color.Red);
                 return false;
             }
         }
 
         public static bool CheckFolder(string folder, string name)
         {
-            Print(name + "...\t");
+            AddPreparation(String.Format("{0}...", name));
             if (Directory.Exists(folder) && Directory.GetFiles(folder).Length != 0)
             {
-                PrintLine("[OK]", Color.Green);
+                AddRes("[OK]", Color.Green);
                 return true;
             }
             else
             {
-                PrintLine("[Не найдено]", Color.Red);
+                AddRes("[Не найдено]", Color.Red);
                 return false;
             }
         }
@@ -173,7 +227,7 @@ namespace olympchecker_gui
             }
             if (!FileAvailable(fileName))
             {
-                Print("Не могу получить доступ к '" + fileName + "'", Color.Red);
+                Error(String.Format("Не могу получить доступ к '{0}'", fileName));
             }
         }
         #endregion
@@ -186,34 +240,44 @@ namespace olympchecker_gui
 
         public static void FatalError(string message)
         {
-            MessageBox.Show(message, "Произошла ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Error(message);
             Application.Exit();
             Environment.Exit(1);
         }
 
-        public static void Print(string text, Color color)
+        public static void AddPreparation(string text, Color color)
         {
-            Program.mainForm.Print(text, color);
+            Program.mainForm.AddItem(text, 0, color);
         }
 
-        public static void Print(string text)
+        public static void AddTesting(string text, Color color)
         {
-            Print(text, Color.Black);
+            Program.mainForm.AddItem(text, 1, color);
         }
 
-        public static void PrintLine(string text, Color color)
+        public static void AddResult(string text, Color color)
         {
-            Print(text + "\n", color);
+            Program.mainForm.AddItem(text, 2, color);
         }
 
-        public static void PrintLine(string text = "")
+        public static void AddPreparation(string text)
         {
-            PrintLine(text, Color.Black);
+            AddPreparation(text, SystemColors.WindowText);
         }
 
-        public static void PrintError(Exception exception)
+        public static void AddTesting(string text)
         {
-            PrintLine("[Ошибка: " + exception.ToString() + "]", Color.Red);
+            AddTesting(text, SystemColors.WindowText);
+        }
+
+        public static void AddResult(string text)
+        {
+            AddResult(text, SystemColors.WindowText);
+        }
+
+        public static void AddRes(string text, Color color, string tooltip = "")
+        {
+            Program.mainForm.AddResult(text, color, tooltip);
         }
         #endregion
 

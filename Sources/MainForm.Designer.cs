@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Подготовка", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Тестирование", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Результаты", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.picTimeLimit = new System.Windows.Forms.PictureBox();
@@ -63,12 +66,16 @@
             this.checkUpdatesItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnRun = new System.Windows.Forms.Button();
-            this.output = new System.Windows.Forms.RichTextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.btnStop = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.listView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.richTextBox = new System.Windows.Forms.RichTextBox();
+            this.btnSwitchSize = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTestsFolder)).BeginInit();
@@ -321,7 +328,7 @@
             this.helpItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(850, 24);
+            this.menuStrip.Size = new System.Drawing.Size(895, 24);
             this.menuStrip.TabIndex = 2;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -389,10 +396,10 @@
             // 
             // checkUpdatesItem
             // 
-            this.checkUpdatesItem.Enabled = false;
             this.checkUpdatesItem.Name = "checkUpdatesItem";
             this.checkUpdatesItem.Size = new System.Drawing.Size(199, 22);
             this.checkUpdatesItem.Text = "Проверка обновлений";
+            this.checkUpdatesItem.Click += new System.EventHandler(this.checkUpdatesItem_Click);
             // 
             // aboutItem
             // 
@@ -410,19 +417,6 @@
             this.btnRun.Text = "Начать";
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
-            // 
-            // output
-            // 
-            this.output.BackColor = System.Drawing.SystemColors.Control;
-            this.output.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.output.Location = new System.Drawing.Point(499, 27);
-            this.output.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
-            this.output.Name = "output";
-            this.output.ReadOnly = true;
-            this.output.Size = new System.Drawing.Size(351, 384);
-            this.output.TabIndex = 4;
-            this.output.TabStop = false;
-            this.output.Text = "";
             // 
             // openFileDialog
             // 
@@ -458,17 +452,80 @@
             this.progressBar.Size = new System.Drawing.Size(468, 23);
             this.progressBar.TabIndex = 5;
             // 
+            // listView
+            // 
+            this.listView.BackColor = System.Drawing.SystemColors.Control;
+            this.listView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2});
+            this.listView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.listView.FullRowSelect = true;
+            listViewGroup1.Header = "Подготовка";
+            listViewGroup1.Name = "groupPreparation";
+            listViewGroup2.Header = "Тестирование";
+            listViewGroup2.Name = "groupTesting";
+            listViewGroup3.Header = "Результаты";
+            listViewGroup3.Name = "groupResults";
+            this.listView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
+            this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listView.Location = new System.Drawing.Point(495, 27);
+            this.listView.Name = "listView";
+            this.listView.ShowItemToolTips = true;
+            this.listView.Size = new System.Drawing.Size(401, 457);
+            this.listView.TabIndex = 6;
+            this.listView.UseCompatibleStateImageBehavior = false;
+            this.listView.View = System.Windows.Forms.View.Details;
+            this.listView.SelectedIndexChanged += new System.EventHandler(this.listView_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Событие";
+            this.columnHeader1.Width = 270;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Результат";
+            this.columnHeader2.Width = 113;
+            // 
+            // richTextBox
+            // 
+            this.richTextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox.Location = new System.Drawing.Point(12, 405);
+            this.richTextBox.Name = "richTextBox";
+            this.richTextBox.ReadOnly = true;
+            this.richTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.richTextBox.Size = new System.Drawing.Size(468, 79);
+            this.richTextBox.TabIndex = 7;
+            this.richTextBox.Text = "";
+            // 
+            // btnSwitchSize
+            // 
+            this.btnSwitchSize.Location = new System.Drawing.Point(12, 344);
+            this.btnSwitchSize.Name = "btnSwitchSize";
+            this.btnSwitchSize.Size = new System.Drawing.Size(23, 23);
+            this.btnSwitchSize.TabIndex = 8;
+            this.btnSwitchSize.Text = "  &s";
+            this.btnSwitchSize.UseVisualStyleBackColor = true;
+            this.btnSwitchSize.Click += new System.EventHandler(this.btnSwitchSize_Click);
+            // 
             // MainForm
             // 
             this.AcceptButton = this.btnRun;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnStop;
-            this.ClientSize = new System.Drawing.Size(850, 411);
+            this.ClientSize = new System.Drawing.Size(895, 487);
+            this.Controls.Add(this.btnSwitchSize);
+            this.Controls.Add(this.richTextBox);
+            this.Controls.Add(this.listView);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnStop);
-            this.Controls.Add(this.output);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip);
@@ -517,7 +574,6 @@
         private System.Windows.Forms.PictureBox picTestsFolder;
         private System.Windows.Forms.PictureBox picSourceFile;
         private System.Windows.Forms.Button btnRun;
-        private System.Windows.Forms.RichTextBox output;
         private System.Windows.Forms.PictureBox picTimeLimit;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
@@ -536,5 +592,10 @@
         private System.Windows.Forms.ToolStripMenuItem settingsItem;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.ListView listView;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.RichTextBox richTextBox;
+        private System.Windows.Forms.Button btnSwitchSize;
     }
 }

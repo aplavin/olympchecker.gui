@@ -7,7 +7,7 @@ using System.IO;
 
 namespace olympchecker_gui
 {
-    class SettingsManager
+    static class SettingsManager
     {
         private static readonly string fileName = Path.Combine(Directory.GetCurrentDirectory(), "settings.ini");
         private static IConfigSource configSource;
