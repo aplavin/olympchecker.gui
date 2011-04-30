@@ -32,22 +32,22 @@ namespace olympchecker_gui
         /// <summary>
         /// The first element of the pair.
         /// </summary>
-        public TFirst First;
+        public TFirst First { get; set; }
 
         /// <summary>
         /// The second element of the pair.
         /// </summary>
-        public TSecond Second;
+        public TSecond Second { get; set; }
 
         /// <summary>
         /// Creates a new pair with given first and second elements.
         /// </summary>
         /// <param name="first">The first element of the pair.</param>
         /// <param name="second">The second element of the pair.</param>
-        public Pair(TFirst first, TSecond second)
+        public Pair(TFirst first, TSecond second) : this()
         {
-            this.First = first;
-            this.Second = second;
+            First = first;
+            Second = second;
         }
 
         /// <summary>
@@ -55,10 +55,10 @@ namespace olympchecker_gui
         /// First element gets the Key, and the Second elements gets the Value.
         /// </summary>
         /// <param name="keyAndValue">The KeyValuePair to initialize the Pair with .</param>
-        public Pair(KeyValuePair<TFirst, TSecond> keyAndValue)
+        public Pair(KeyValuePair<TFirst, TSecond> keyAndValue) : this()
         {
-            this.First = keyAndValue.Key;
-            this.Second = keyAndValue.Value;
+            First = keyAndValue.Key;
+            Second = keyAndValue.Value;
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace olympchecker_gui
                     throw new NotSupportedException(string.Format(Strings.UncomparableType, typeof(TSecond).FullName));
                 }
                 else*/
-                    throw;              // Hmmm. Unclear why we got the ArgumentException. 
+                throw;              // Hmmm. Unclear why we got the ArgumentException. 
             }
         }
 
@@ -209,6 +209,15 @@ namespace olympchecker_gui
         public static bool operator !=(Pair<TFirst, TSecond> pair1, Pair<TFirst, TSecond> pair2)
         {
             return !(pair1 == pair2);
+        }
+
+        public static bool operator <(Pair<TFirst, TSecond> left, Pair<TFirst, TSecond> right)
+        {
+            return (left.CompareTo(right) < 0);
+        }
+        public static bool operator >(Pair<TFirst, TSecond> left, Pair<TFirst, TSecond> right)
+        {
+            return (left.CompareTo(right) > 0);
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace olympchecker_gui
             public ProgressNotifier progressNotifier;
         };
         private enum Code { OK, WA, PE, FL, RE, TL };
-        private static string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
+        private static readonly string[] resultDirs = { "OK", "WA", "PE", "FL", "RE", "TL" };
         private static readonly string workDir = "work";
         private static readonly string solutionExec = "olympSolution.exe";
         private static readonly string checkerExec = "olympChecker.exe";
@@ -33,7 +33,6 @@ namespace olympchecker_gui
         private static int maxTime;
         private static Parameters parameters;
         private static Thread testingThread;
-        private static bool noErrors;
 
         static Tester()
         {
@@ -77,17 +76,15 @@ namespace olympchecker_gui
         {
             try
             {
-                if (!CleanBefore()) { noErrors = false; return; }
-                if (!CompileSolution()) { noErrors = false; return; }
-                if (!parameters.internalCheck && !CompileChecker()) { noErrors = false; return; }
-                if (!FindTests()) { noErrors = false; return; }
-                if (!PerformTesting()) { noErrors = false; return; }
+                if (!CleanBefore()) { return; }
+                if (!CompileSolution()) { return; }
+                if (!parameters.internalCheck && !CompileChecker()) { return; }
+                if (!FindTests()) { return; }
+                if (!PerformTesting()) { return; }
                 PrintResult();
-                if (!CleanAfter()) { noErrors = false; return; }
+                if (!CleanAfter()) { return; }
             }
             catch (ThreadAbortException) { }
-
-            noErrors = true;
         }
 
         private static void KillSolutions()

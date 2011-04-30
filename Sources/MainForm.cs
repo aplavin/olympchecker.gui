@@ -389,7 +389,7 @@ namespace olympchecker_gui
         }
 
         delegate void AddResultToListView(string text, Color color, string tooltip);
-        public void AddResult(string text, Color color, string tooltip = "")
+        public void AddResult(string text, Color color, string tooltip)
         {
             try
             {

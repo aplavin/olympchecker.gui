@@ -139,22 +139,24 @@ namespace olympchecker_gui
 
         public static string[] GuessFileNames(string sourceFile)
         {
-            string inputFile = String.Empty, outputFile = String.Empty;
+            string inputFile = String.Empty;
+            string outputFile = String.Empty;
 
-            StreamReader reader = new StreamReader(sourceFile);
-            string[] strings = reader.ReadToEnd().Replace('\'', '"').Split('"');
-            reader.Close();
-
-            for (int i = 1; i < strings.Length; i += 2)
+            using (StreamReader reader = new StreamReader(sourceFile))
             {
-                if (strings[i].EndsWith(".in")) { inputFile = strings[i]; }
-                else if (strings[i].EndsWith(".out")) { outputFile = strings[i]; }
+                string[] strings = reader.ReadToEnd().Replace('\'', '"').Split('"');
 
-                else if (strings[i].StartsWith("in")) { inputFile = strings[i]; }
-                else if (strings[i].StartsWith("out")) { outputFile = strings[i]; }
+                for (int i = 1; i < strings.Length; i += 2)
+                {
+                    if (strings[i].EndsWith(".in")) { inputFile = strings[i]; }
+                    else if (strings[i].EndsWith(".out")) { outputFile = strings[i]; }
 
-                else if (strings[i].Contains("in")) { inputFile = strings[i]; }
-                else if (strings[i].Contains("out")) { outputFile = strings[i]; }
+                    else if (strings[i].StartsWith("in")) { inputFile = strings[i]; }
+                    else if (strings[i].StartsWith("out")) { outputFile = strings[i]; }
+
+                    else if (strings[i].Contains("in")) { inputFile = strings[i]; }
+                    else if (strings[i].Contains("out")) { outputFile = strings[i]; }
+                }
             }
 
             return new string[2] { inputFile, outputFile };
@@ -216,7 +218,7 @@ namespace olympchecker_gui
         {
             if (!File.Exists(fileName))
             {
-                File.Create(fileName);
+                using (File.Create(fileName)) { }
             }
 
             int cnt = 100;
