@@ -25,16 +25,23 @@ namespace olympchecker_gui
                 Utils.FatalError("Ошибка при открытии файла \"" + fileName + "\"");
             }
 
-
             try
             {
                 // Fill compilers list using data from configSource
                 compilers = (from IConfig iConfig in configSource.Configs
-                                 where iConfig.Name.StartsWith("Compiler_")
-                                 select new Compiler(
-                                     iConfig.Get("Name"), iConfig.Get("Path"), iConfig.Get("Options"), iConfig.Get("Extensions"))
-                                     )
+                             where iConfig.Name.StartsWith("Compiler_")
+                             select new Compiler(
+                                 iConfig.Get("Name"), iConfig.Get("Path"), iConfig.Get("Options"), iConfig.Get("Extensions"))
+                              )
                                 .ToList();
+
+                foreach (Compiler comp in compilers)
+                {
+                    if (!Path.IsPathRooted(comp.path))
+                    {
+                        comp.path = Path.Combine(Program.programDirectory, comp.path);
+                    }
+                }
             }
             catch (Nini.Ini.IniException)
             {
@@ -53,7 +60,14 @@ namespace olympchecker_gui
                     configSource.AddConfig("Compiler_" + i);
                     configSource.Configs["Compiler_" + i].Set("Name", compilers[i].name);
                     configSource.Configs["Compiler_" + i].Set("Extensions", compilers[i].extensions);
-                    configSource.Configs["Compiler_" + i].Set("Path", compilers[i].path);
+                    
+                    string path = compilers[i].path;
+                    if (path.StartsWith(Program.programDirectory))
+                    {
+                        path = path.Substring(Program.programDirectory.Length);
+                    }
+                    configSource.Configs["Compiler_" + i].Set("Path", path);
+
                     configSource.Configs["Compiler_" + i].Set("Options", compilers[i].options);
                 }
 

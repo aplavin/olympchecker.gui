@@ -30,11 +30,6 @@ namespace olympchecker_gui
             picChecker.Visible = rbCustomChecker.Checked;
         }
 
-        private void radioButtonInternalChecker_CheckedChanged(object sender, EventArgs e)
-        {
-            cbExactChecking.Enabled = rbInternalChecker.Checked;
-        }
-
         private void exitItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -68,7 +63,7 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (!Utils.isExecutable(text) && CompilersManager.GetCompiler(ext) == null)
+            else if (!Utils.IsExecutable(text) && CompilersManager.GetCompiler(ext) == null)
             {
                 image = Icons.Error;
                 tooltip = "Не найден компилятор для расширения \"" + Path.GetExtension(tbSourceFile.Text) + "\"";
@@ -211,7 +206,7 @@ namespace olympchecker_gui
                 image = Icons.Error;
                 tooltip = "Файл не существует";
             }
-            else if (!Utils.isExecutable(text) && CompilersManager.GetCompiler(ext) == null)
+            else if (!Utils.IsExecutable(text) && CompilersManager.GetCompiler(ext) == null)
             {
                 image = Icons.Error;
                 tooltip = "Не найден компилятор для расширения \"" + ext + "\"";
@@ -261,6 +256,81 @@ namespace olympchecker_gui
         }
         #endregion
 
+        #region tbProblemFolder
+        private void btnClearProblemFolder_Click(object sender, EventArgs e)
+        {
+            tbProblemFolder.Clear();
+        }
+
+        private void tbProblemFolder_TextChanged(object sender, EventArgs e)
+        {
+
+            string text = tbProblemFolder.Text;
+            Image image = null;
+            string tooltip = null;
+            bool ok = false;
+            if (String.IsNullOrEmpty(text))
+            {
+                // image = null, tooltip = null
+            }
+            else if (!Directory.Exists(text))
+            {
+                image = Icons.Error;
+                tooltip = "Папка не существует";
+            }
+            else if (Directory.GetFileSystemEntries(text).Length == 0)
+            {
+                image = Icons.Error;
+                tooltip = "Папка пуста";
+            }
+            else
+            {
+                image = Icons.OK;
+                ok = true;
+            }
+
+            picProblemFolder.Image = image;
+            toolTip.SetToolTip(picProblemFolder, tooltip);
+
+            lblAutodetect.Visible = ok;
+        }
+
+        private void tbProblemFolder_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void tbProblemFolder_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                tbProblemFolder.Text = filePaths[0];
+                tbProblemFolder.SelectionStart = tbProblemFolder.Text.Length;
+            }
+        }
+
+        private void tbProblemFolder_DoubleClick(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(tbProblemFolder.Text))
+            {
+                folderBrowserDialog.SelectedPath = tbProblemFolder.Text;
+            }
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                tbProblemFolder.Text = folderBrowserDialog.SelectedPath;
+                tbProblemFolder.SelectionStart = tbProblemFolder.Text.Length;
+            }
+        }
+        #endregion
+
         private void textBoxTimeLimit_TextChanged(object sender, EventArgs e)
         {
             double t;
@@ -284,6 +354,7 @@ namespace olympchecker_gui
         private void btnRun_Click(object sender, EventArgs e)
         {
             this.Size = expanded;
+            this.Refresh();
 
             listView.Items.Clear();
 
@@ -298,11 +369,9 @@ namespace olympchecker_gui
             }
 
 
-            Tester.Parameters parameters = new Tester.Parameters()
+            Preparer.Data data = new Preparer.Data()
             {
-                compiler = CompilersManager.GetCompiler(Path.GetExtension(tbSourceFile.Text)),
-                compilerChecker = CompilersManager.GetCompiler(Path.GetExtension(tbCustomCheckerSource.Text)),
-
+                problemDir = tbProblemFolder.Text,
                 source = tbSourceFile.Text,
                 testsDir = tbTestsFolder.Text,
                 timeLimit = (int)(Double.Parse(tbTimeLimit.Text) * 1000),
@@ -312,13 +381,16 @@ namespace olympchecker_gui
                 standartIO = cbUseStandartIO.Checked,
 
                 internalCheck = rbInternalChecker.Checked,
-                exactCheck = cbExactChecking.Checked,
                 checker = tbCustomCheckerSource.Text,
 
                 progressNotifier = UpdateProgress,
             };
 
-            Tester.TestSolution(parameters);
+            Tester.Parameters parameters = Preparer.Prepare(data);
+            if (parameters != null)
+            {
+                Tester.TestSolution(parameters);
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -330,18 +402,22 @@ namespace olympchecker_gui
         {
             Utils.AddPreparation("Проверка доступности файлов:");
 
-            if (!Utils.CheckFile(tbSourceFile.Text, "Файл решения") || !Utils.CheckFolder(tbTestsFolder.Text, "Папка тестов")
-                || (rbCustomChecker.Checked && !Utils.CheckFile(tbCustomCheckerSource.Text, "Проверяющая программа")))
+            if (!Utils.CheckFile(tbSourceFile.Text, "Файл решения"))
             {
                 return false;
             }
+            if(!Utils.CheckFolder(tbProblemFolder.Text, "Папка задачи") && 
+                (!Utils.CheckFolder(tbTestsFolder.Text, "Папка тестов")
+                || (rbCustomChecker.Checked && !Utils.CheckFile(tbCustomCheckerSource.Text, "Проверяющая программа")))) {
+                    return false;
+                }
 
             List<string> extensions = new List<string>();
-            if (!Utils.isExecutable(tbSourceFile.Text))
+            if (!Utils.IsExecutable(tbSourceFile.Text))
             {
                 extensions.Add(Path.GetExtension(tbSourceFile.Text));
             }
-            if (rbCustomChecker.Checked && !Utils.isExecutable(tbCustomCheckerSource.Text))
+            if (rbCustomChecker.Checked && !Utils.IsExecutable(tbCustomCheckerSource.Text))
             {
                 extensions.Add(Path.GetExtension(tbCustomCheckerSource.Text));
             }

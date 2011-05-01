@@ -60,6 +60,13 @@ namespace olympchecker_gui {
             }
         }
         
+        internal static System.Drawing.Bitmap Clear {
+            get {
+                object obj = ResourceManager.GetObject("Clear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Error {
             get {
                 object obj = ResourceManager.GetObject("Error", resourceCulture);

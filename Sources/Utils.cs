@@ -13,9 +13,22 @@ namespace olympchecker_gui
     {
         private static readonly string[] execExtensions = { ".exe", ".bat", ".com" };
 
-        public static bool isExecutable(string fileName)
+        public static bool IsExecutable(string fileName)
         {
             return execExtensions.Contains(Path.GetExtension(fileName));
+        }
+
+        public static bool ContainsCI(this string s, string t)
+        {
+            return s.ToLower().Contains(t.ToLower());
+        }
+
+        public static bool ContainsCI(this string[] sa, string t)
+        {
+            return (from s in sa
+                    where s.ToLower() == t.ToLower()
+                    select s)
+                    .Count() > 0;
         }
 
         public static Process StartProcess(string fileName, string args = "", bool oneProcessor = false)
@@ -53,12 +66,17 @@ namespace olympchecker_gui
             }
             else
             {
-                string s = CompilersManager.GetCompiler(extension).Compile(source, output);
+                Compiler compiler = CompilersManager.GetCompiler(extension);
+                if (compiler == null)
+                {
+                    return String.Format("Не найден компилятор для расширения '{0}'", extension);
+                }
+                string s = compiler.Compile(source, output);
                 return (s == null ? null : "Ошибка компиляции:\n" + s);
             }
         }
 
-        public static bool CompareFiles(string answerFile, string outFile, bool exact, out string additionalInfo)
+        public static bool CompareFiles(string answerFile, string outFile, out string additionalInfo)
         {
             Utils.WaitForFile(answerFile);
             Utils.WaitForFile(outFile);
@@ -83,28 +101,25 @@ namespace olympchecker_gui
                     }
                     catch (IOException) { outStr = String.Empty; }
 
-                    if (!exact)
+                    try
                     {
-                        try
+                        while (ansStr.Contains("  "))
                         {
-                            while (ansStr.Contains("  "))
-                            {
-                                ansStr = ansStr.Replace("  ", " ");
-                            }
-                            ansStr = ansStr.Trim();
+                            ansStr = ansStr.Replace("  ", " ");
                         }
-                        catch (NullReferenceException) { }
-
-                        try
-                        {
-                            while (outStr.Contains("  "))
-                            {
-                                outStr = outStr.Replace("  ", " ");
-                            }
-                            outStr = outStr.Trim();
-                        }
-                        catch (NullReferenceException) { }
+                        ansStr = ansStr.Trim();
                     }
+                    catch (NullReferenceException) { }
+
+                    try
+                    {
+                        while (outStr.Contains("  "))
+                        {
+                            outStr = outStr.Replace("  ", " ");
+                        }
+                        outStr = outStr.Trim();
+                    }
+                    catch (NullReferenceException) { }
 
                     if (ansStr != outStr)
                     {

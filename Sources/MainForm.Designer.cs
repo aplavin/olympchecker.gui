@@ -33,20 +33,23 @@
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Тестирование", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Результаты", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblAutodetect = new System.Windows.Forms.Label();
+            this.picProblemFolder = new System.Windows.Forms.PictureBox();
+            this.btnClearProblemFolder = new System.Windows.Forms.Button();
+            this.tbProblemFolder = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.picSourceFile = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbSourceFile = new System.Windows.Forms.TextBox();
             this.picTimeLimit = new System.Windows.Forms.PictureBox();
             this.picTestsFolder = new System.Windows.Forms.PictureBox();
-            this.picSourceFile = new System.Windows.Forms.PictureBox();
             this.tbTimeLimit = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tbTestsFolder = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbSourceFile = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.picChecker = new System.Windows.Forms.PictureBox();
             this.cbUseStandartIO = new System.Windows.Forms.CheckBox();
-            this.cbExactChecking = new System.Windows.Forms.CheckBox();
             this.tbCustomCheckerSource = new System.Windows.Forms.TextBox();
             this.rbCustomChecker = new System.Windows.Forms.RadioButton();
             this.rbInternalChecker = new System.Windows.Forms.RadioButton();
@@ -76,130 +79,33 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.btnSwitchSize = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProblemFolder)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picSourceFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTimeLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picTestsFolder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSourceFile)).BeginInit();
-            this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picChecker)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.picTimeLimit);
-            this.groupBox1.Controls.Add(this.picTestsFolder);
-            this.groupBox1.Controls.Add(this.picSourceFile);
-            this.groupBox1.Controls.Add(this.tbTimeLimit);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.tbTestsFolder);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.tbSourceFile);
-            this.groupBox1.Location = new System.Drawing.Point(12, 27);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(468, 134);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Решение";
-            // 
-            // picTimeLimit
-            // 
-            this.picTimeLimit.Image = global::olympchecker_gui.Icons.OK;
-            this.picTimeLimit.Location = new System.Drawing.Point(214, 96);
-            this.picTimeLimit.Name = "picTimeLimit";
-            this.picTimeLimit.Size = new System.Drawing.Size(20, 20);
-            this.picTimeLimit.TabIndex = 8;
-            this.picTimeLimit.TabStop = false;
-            // 
-            // picTestsFolder
-            // 
-            this.picTestsFolder.Image = global::olympchecker_gui.Icons.Warning;
-            this.picTestsFolder.Location = new System.Drawing.Point(442, 62);
-            this.picTestsFolder.Name = "picTestsFolder";
-            this.picTestsFolder.Size = new System.Drawing.Size(20, 20);
-            this.picTestsFolder.TabIndex = 7;
-            this.picTestsFolder.TabStop = false;
-            this.toolTip.SetToolTip(this.picTestsFolder, "Не введено имя папки");
-            // 
-            // picSourceFile
-            // 
-            this.picSourceFile.Image = global::olympchecker_gui.Icons.Warning;
-            this.picSourceFile.Location = new System.Drawing.Point(442, 27);
-            this.picSourceFile.Name = "picSourceFile";
-            this.picSourceFile.Size = new System.Drawing.Size(20, 20);
-            this.picSourceFile.TabIndex = 6;
-            this.picSourceFile.TabStop = false;
-            this.toolTip.SetToolTip(this.picSourceFile, "Не введено имя файла");
-            // 
-            // tbTimeLimit
-            // 
-            this.tbTimeLimit.HidePromptOnLeave = true;
-            this.tbTimeLimit.Location = new System.Drawing.Point(147, 96);
-            this.tbTimeLimit.Mask = "0.9";
-            this.tbTimeLimit.Name = "tbTimeLimit";
-            this.tbTimeLimit.Size = new System.Drawing.Size(61, 20);
-            this.tbTimeLimit.TabIndex = 2;
-            this.tbTimeLimit.Text = "10";
-            this.tbTimeLimit.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
-            this.tbTimeLimit.TextChanged += new System.EventHandler(this.textBoxTimeLimit_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 99);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(135, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Ограничение времени (с)";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 65);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Папка тестов";
-            // 
-            // tbTestsFolder
-            // 
-            this.tbTestsFolder.AllowDrop = true;
-            this.tbTestsFolder.Location = new System.Drawing.Point(96, 62);
-            this.tbTestsFolder.Name = "tbTestsFolder";
-            this.tbTestsFolder.Size = new System.Drawing.Size(340, 20);
-            this.tbTestsFolder.TabIndex = 1;
-            this.tbTestsFolder.TextChanged += new System.EventHandler(this.textBoxTestsFolder_TextChanged);
-            this.tbTestsFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragDrop);
-            this.tbTestsFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragEnter);
-            this.tbTestsFolder.DoubleClick += new System.EventHandler(this.textBoxTestsFolder_DoubleClick);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(79, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Исходный код";
-            // 
-            // tbSourceFile
-            // 
-            this.tbSourceFile.AllowDrop = true;
-            this.tbSourceFile.Location = new System.Drawing.Point(97, 27);
-            this.tbSourceFile.Name = "tbSourceFile";
-            this.tbSourceFile.Size = new System.Drawing.Size(339, 20);
-            this.tbSourceFile.TabIndex = 0;
-            this.tbSourceFile.TextChanged += new System.EventHandler(this.textBoxSourceFile_TextChanged);
-            this.tbSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragDrop);
-            this.tbSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragEnter);
-            this.tbSourceFile.DoubleClick += new System.EventHandler(this.textBoxSourceFile_DoubleClick);
-            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblAutodetect);
+            this.groupBox2.Controls.Add(this.picProblemFolder);
+            this.groupBox2.Controls.Add(this.btnClearProblemFolder);
+            this.groupBox2.Controls.Add(this.tbProblemFolder);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.picSourceFile);
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.tbSourceFile);
+            this.groupBox2.Controls.Add(this.picTimeLimit);
+            this.groupBox2.Controls.Add(this.picTestsFolder);
+            this.groupBox2.Controls.Add(this.tbTimeLimit);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.tbTestsFolder);
             this.groupBox2.Controls.Add(this.picChecker);
             this.groupBox2.Controls.Add(this.cbUseStandartIO);
-            this.groupBox2.Controls.Add(this.cbExactChecking);
             this.groupBox2.Controls.Add(this.tbCustomCheckerSource);
             this.groupBox2.Controls.Add(this.rbCustomChecker);
             this.groupBox2.Controls.Add(this.rbInternalChecker);
@@ -207,17 +113,159 @@
             this.groupBox2.Controls.Add(this.tbOutputFileName);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.tbInputFileName);
-            this.groupBox2.Location = new System.Drawing.Point(12, 167);
+            this.groupBox2.Location = new System.Drawing.Point(12, 27);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(468, 171);
+            this.groupBox2.Size = new System.Drawing.Size(468, 311);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Проверка";
+            this.groupBox2.Text = "Задача";
+            // 
+            // lblAutodetect
+            // 
+            this.lblAutodetect.Location = new System.Drawing.Point(6, 229);
+            this.lblAutodetect.Name = "lblAutodetect";
+            this.lblAutodetect.Size = new System.Drawing.Size(456, 72);
+            this.lblAutodetect.TabIndex = 21;
+            this.lblAutodetect.Text = "Местоположение тестов и способ проверки ответа определяются автоматически по инфо" +
+                "рмации в папке задачи.";
+            this.lblAutodetect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAutodetect.Visible = false;
+            // 
+            // picProblemFolder
+            // 
+            this.picProblemFolder.Location = new System.Drawing.Point(442, 194);
+            this.picProblemFolder.Name = "picProblemFolder";
+            this.picProblemFolder.Size = new System.Drawing.Size(20, 20);
+            this.picProblemFolder.TabIndex = 22;
+            this.picProblemFolder.TabStop = false;
+            // 
+            // btnClearProblemFolder
+            // 
+            this.btnClearProblemFolder.Image = global::olympchecker_gui.Icons.Clear;
+            this.btnClearProblemFolder.Location = new System.Drawing.Point(412, 192);
+            this.btnClearProblemFolder.Name = "btnClearProblemFolder";
+            this.btnClearProblemFolder.Size = new System.Drawing.Size(24, 23);
+            this.btnClearProblemFolder.TabIndex = 20;
+            this.btnClearProblemFolder.UseVisualStyleBackColor = true;
+            this.btnClearProblemFolder.Click += new System.EventHandler(this.btnClearProblemFolder_Click);
+            // 
+            // tbProblemFolder
+            // 
+            this.tbProblemFolder.AllowDrop = true;
+            this.tbProblemFolder.Location = new System.Drawing.Point(97, 194);
+            this.tbProblemFolder.Name = "tbProblemFolder";
+            this.tbProblemFolder.Size = new System.Drawing.Size(311, 20);
+            this.tbProblemFolder.TabIndex = 19;
+            this.tbProblemFolder.TextChanged += new System.EventHandler(this.tbProblemFolder_TextChanged);
+            this.tbProblemFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.tbProblemFolder_DragDrop);
+            this.tbProblemFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.tbProblemFolder_DragEnter);
+            this.tbProblemFolder.DoubleClick += new System.EventHandler(this.tbProblemFolder_DoubleClick);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(5, 197);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(77, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "Папка задачи";
+            // 
+            // picSourceFile
+            // 
+            this.picSourceFile.Image = global::olympchecker_gui.Icons.Warning;
+            this.picSourceFile.Location = new System.Drawing.Point(442, 19);
+            this.picSourceFile.Name = "picSourceFile";
+            this.picSourceFile.Size = new System.Drawing.Size(20, 20);
+            this.picSourceFile.TabIndex = 17;
+            this.picSourceFile.TabStop = false;
+            this.toolTip.SetToolTip(this.picSourceFile, "Не введено имя файла");
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(83, 13);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Файл решения";
+            // 
+            // tbSourceFile
+            // 
+            this.tbSourceFile.AllowDrop = true;
+            this.tbSourceFile.Location = new System.Drawing.Point(97, 19);
+            this.tbSourceFile.Name = "tbSourceFile";
+            this.tbSourceFile.Size = new System.Drawing.Size(339, 20);
+            this.tbSourceFile.TabIndex = 15;
+            this.tbSourceFile.TextChanged += new System.EventHandler(this.textBoxSourceFile_TextChanged);
+            this.tbSourceFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragDrop);
+            this.tbSourceFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxSourceFile_DragEnter);
+            this.tbSourceFile.DoubleClick += new System.EventHandler(this.textBoxSourceFile_DoubleClick);
+            // 
+            // picTimeLimit
+            // 
+            this.picTimeLimit.Image = global::olympchecker_gui.Icons.OK;
+            this.picTimeLimit.Location = new System.Drawing.Point(241, 50);
+            this.picTimeLimit.Name = "picTimeLimit";
+            this.picTimeLimit.Size = new System.Drawing.Size(20, 20);
+            this.picTimeLimit.TabIndex = 14;
+            this.picTimeLimit.TabStop = false;
+            // 
+            // picTestsFolder
+            // 
+            this.picTestsFolder.Image = global::olympchecker_gui.Icons.Warning;
+            this.picTestsFolder.Location = new System.Drawing.Point(442, 229);
+            this.picTestsFolder.Name = "picTestsFolder";
+            this.picTestsFolder.Size = new System.Drawing.Size(20, 20);
+            this.picTestsFolder.TabIndex = 13;
+            this.picTestsFolder.TabStop = false;
+            this.toolTip.SetToolTip(this.picTestsFolder, "Не введено имя папки");
+            // 
+            // tbTimeLimit
+            // 
+            this.tbTimeLimit.HidePromptOnLeave = true;
+            this.tbTimeLimit.Location = new System.Drawing.Point(174, 50);
+            this.tbTimeLimit.Mask = "0.9";
+            this.tbTimeLimit.Name = "tbTimeLimit";
+            this.tbTimeLimit.Size = new System.Drawing.Size(61, 20);
+            this.tbTimeLimit.TabIndex = 10;
+            this.tbTimeLimit.Text = "10";
+            this.tbTimeLimit.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals;
+            this.tbTimeLimit.TextChanged += new System.EventHandler(this.textBoxTimeLimit_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(150, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Ограничение по времени (с)";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 232);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(76, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Папка тестов";
+            // 
+            // tbTestsFolder
+            // 
+            this.tbTestsFolder.AllowDrop = true;
+            this.tbTestsFolder.Location = new System.Drawing.Point(97, 229);
+            this.tbTestsFolder.Name = "tbTestsFolder";
+            this.tbTestsFolder.Size = new System.Drawing.Size(339, 20);
+            this.tbTestsFolder.TabIndex = 9;
+            this.tbTestsFolder.TextChanged += new System.EventHandler(this.textBoxTestsFolder_TextChanged);
+            this.tbTestsFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragDrop);
+            this.tbTestsFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxTestsFolder_DragEnter);
+            this.tbTestsFolder.DoubleClick += new System.EventHandler(this.textBoxTestsFolder_DoubleClick);
             // 
             // picChecker
             // 
             this.picChecker.Image = global::olympchecker_gui.Icons.Warning;
-            this.picChecker.Location = new System.Drawing.Point(442, 135);
+            this.picChecker.Location = new System.Drawing.Point(442, 281);
             this.picChecker.Name = "picChecker";
             this.picChecker.Size = new System.Drawing.Size(20, 20);
             this.picChecker.TabIndex = 8;
@@ -228,28 +276,18 @@
             // cbUseStandartIO
             // 
             this.cbUseStandartIO.AutoSize = true;
-            this.cbUseStandartIO.Location = new System.Drawing.Point(9, 88);
+            this.cbUseStandartIO.Location = new System.Drawing.Point(9, 141);
             this.cbUseStandartIO.Name = "cbUseStandartIO";
             this.cbUseStandartIO.Size = new System.Drawing.Size(266, 17);
             this.cbUseStandartIO.TabIndex = 2;
             this.cbUseStandartIO.Text = "Использовать также стандартный ввод/вывод";
             this.cbUseStandartIO.UseVisualStyleBackColor = true;
             // 
-            // cbExactChecking
-            // 
-            this.cbExactChecking.AutoSize = true;
-            this.cbExactChecking.Location = new System.Drawing.Point(173, 112);
-            this.cbExactChecking.Name = "cbExactChecking";
-            this.cbExactChecking.Size = new System.Drawing.Size(119, 17);
-            this.cbExactChecking.TabIndex = 4;
-            this.cbExactChecking.Text = "Точное сравнение";
-            this.cbExactChecking.UseVisualStyleBackColor = true;
-            // 
             // tbCustomCheckerSource
             // 
             this.tbCustomCheckerSource.AllowDrop = true;
             this.tbCustomCheckerSource.Enabled = false;
-            this.tbCustomCheckerSource.Location = new System.Drawing.Point(173, 135);
+            this.tbCustomCheckerSource.Location = new System.Drawing.Point(173, 281);
             this.tbCustomCheckerSource.Name = "tbCustomCheckerSource";
             this.tbCustomCheckerSource.Size = new System.Drawing.Size(263, 20);
             this.tbCustomCheckerSource.TabIndex = 5;
@@ -261,7 +299,7 @@
             // rbCustomChecker
             // 
             this.rbCustomChecker.AutoSize = true;
-            this.rbCustomChecker.Location = new System.Drawing.Point(9, 136);
+            this.rbCustomChecker.Location = new System.Drawing.Point(9, 282);
             this.rbCustomChecker.Name = "rbCustomChecker";
             this.rbCustomChecker.Size = new System.Drawing.Size(158, 17);
             this.rbCustomChecker.TabIndex = 3;
@@ -273,19 +311,18 @@
             // 
             this.rbInternalChecker.AutoSize = true;
             this.rbInternalChecker.Checked = true;
-            this.rbInternalChecker.Location = new System.Drawing.Point(9, 111);
+            this.rbInternalChecker.Location = new System.Drawing.Point(9, 257);
             this.rbInternalChecker.Name = "rbInternalChecker";
             this.rbInternalChecker.Size = new System.Drawing.Size(136, 17);
             this.rbInternalChecker.TabIndex = 3;
             this.rbInternalChecker.TabStop = true;
             this.rbInternalChecker.Text = "Встроенная проверка";
             this.rbInternalChecker.UseVisualStyleBackColor = true;
-            this.rbInternalChecker.CheckedChanged += new System.EventHandler(this.radioButtonInternalChecker_CheckedChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 62);
+            this.label5.Location = new System.Drawing.Point(6, 109);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(86, 13);
             this.label5.TabIndex = 3;
@@ -294,7 +331,7 @@
             // tbOutputFileName
             // 
             this.tbOutputFileName.AllowDrop = true;
-            this.tbOutputFileName.Location = new System.Drawing.Point(100, 59);
+            this.tbOutputFileName.Location = new System.Drawing.Point(97, 106);
             this.tbOutputFileName.Name = "tbOutputFileName";
             this.tbOutputFileName.Size = new System.Drawing.Size(112, 20);
             this.tbOutputFileName.TabIndex = 1;
@@ -304,7 +341,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 36);
+            this.label4.Location = new System.Drawing.Point(6, 83);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 13);
             this.label4.TabIndex = 1;
@@ -313,7 +350,7 @@
             // tbInputFileName
             // 
             this.tbInputFileName.AllowDrop = true;
-            this.tbInputFileName.Location = new System.Drawing.Point(100, 33);
+            this.tbInputFileName.Location = new System.Drawing.Point(97, 80);
             this.tbInputFileName.Name = "tbInputFileName";
             this.tbInputFileName.Size = new System.Drawing.Size(112, 20);
             this.tbInputFileName.TabIndex = 0;
@@ -459,7 +496,6 @@
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
-            this.listView.Cursor = System.Windows.Forms.Cursors.Default;
             this.listView.FullRowSelect = true;
             listViewGroup1.Header = "Подготовка";
             listViewGroup1.Name = "groupPreparation";
@@ -527,7 +563,6 @@
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -537,13 +572,12 @@
             this.Text = "OlympChecker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picTimeLimit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picTestsFolder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSourceFile)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picProblemFolder)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picSourceFile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picTimeLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picTestsFolder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picChecker)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
@@ -554,13 +588,6 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.MaskedTextBox tbTimeLimit;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tbTestsFolder;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbSourceFile;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbCustomChecker;
         private System.Windows.Forms.RadioButton rbInternalChecker;
@@ -569,12 +596,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbInputFileName;
         private System.Windows.Forms.TextBox tbCustomCheckerSource;
-        private System.Windows.Forms.CheckBox cbExactChecking;
         private System.Windows.Forms.MenuStrip menuStrip;
-        private System.Windows.Forms.PictureBox picTestsFolder;
-        private System.Windows.Forms.PictureBox picSourceFile;
         private System.Windows.Forms.Button btnRun;
-        private System.Windows.Forms.PictureBox picTimeLimit;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.ToolStripMenuItem fileItem;
@@ -597,5 +620,19 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.RichTextBox richTextBox;
         private System.Windows.Forms.Button btnSwitchSize;
+        private System.Windows.Forms.PictureBox picSourceFile;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbSourceFile;
+        private System.Windows.Forms.PictureBox picTimeLimit;
+        private System.Windows.Forms.PictureBox picTestsFolder;
+        private System.Windows.Forms.MaskedTextBox tbTimeLimit;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox tbTestsFolder;
+        private System.Windows.Forms.Button btnClearProblemFolder;
+        private System.Windows.Forms.TextBox tbProblemFolder;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblAutodetect;
+        private System.Windows.Forms.PictureBox picProblemFolder;
     }
 }

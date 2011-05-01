@@ -1,14 +1,15 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 namespace olympchecker_gui
 {
     class Compiler
     {
 
-        public string name { get; private set; }
-        public string path { get; private set; }
-        public string options { get; private set; }
-        public string extensions { get; private set; }
+        public string name { get; set; }
+        public string path { get; set; }
+        public string options { get; set; }
+        public string extensions { get; set; }
 
         public Compiler(string name, string path, string options, string extensions)
         {
@@ -26,7 +27,9 @@ namespace olympchecker_gui
         public string Compile(string source, string output)
         {
             Process process = Utils.StartProcess(path, options.Replace("SOURCE", "\"" + source + "\"").Replace("OUTPUT", "\"" + output + "\""));
-            string s = process.StandardError.ReadToEnd();
+            string s = Encoding.GetEncoding(866).GetString(
+                process.StandardError.CurrentEncoding.GetBytes(process.StandardError.ReadToEnd())
+                );
             process.WaitForExit();
             return (process.ExitCode == 0 ? null : s);
         }
